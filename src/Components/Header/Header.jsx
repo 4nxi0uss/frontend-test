@@ -8,8 +8,6 @@ import './Header.scss'
 
 class Header extends Component {
 
-    state = {}
-
     render() {
         return (
             <header className='header'>
