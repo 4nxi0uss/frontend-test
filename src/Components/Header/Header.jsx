@@ -6,15 +6,26 @@ import ArrowDown from '../../img/arrow-down.svg'
 
 import './Header.scss'
 
+import { client, Field, Query } from '@tilework/opus'
+
 class Header extends Component {
+    state = {
+        categories: [],
+        choosenCategories: ''
+    }
+
+    componentDidMount() {
+        client.post(new Query(`categories`).addField(new Field('name'))).then((res) => (this.setState({ categories: res.categories })))
+    }
 
     render() {
+
+        const headerCategorires = this.state.categories.map(({ name }) => (<li key={name}>{name}</li>))
+
         return (
             <header className='header'>
                 <ul className='header__nav'>
-                    <li>WOMEN</li>
-                    <li>MEN</li>
-                    <li>KIDS</li>
+                    {headerCategorires}
                 </ul>
                 <img src={Logo} alt="header logo" className='header__logo' />
                 <div className='header__action'>
