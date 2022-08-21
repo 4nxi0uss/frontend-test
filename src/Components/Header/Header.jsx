@@ -1,27 +1,36 @@
 import React, { Component } from 'react';
 
+import './Header.scss'
+
+import { apolloClient } from '../../Apollo/client';
+import { gql } from '@apollo/client';
+
+import { connect } from 'react-redux';
+
+import { changingCategory } from './headerSlice';
+
 import Logo from '../../img/logo-header.svg'
 import Cart from '../../img/cart-empty.svg'
 import ArrowDown from '../../img/arrow-down.svg'
 
-import './Header.scss'
-
-import { client, Field, Query } from '@tilework/opus'
-
 class Header extends Component {
     state = {
         categories: [],
-        choosenCategories: ''
+        currencies: [],
     }
 
     componentDidMount() {
-        client.post(new Query(`categories`).addField(new Field('name'))).then((res) => (this.setState({ categories: res.categories })))
+        apolloClient.query({ query: gql`{categories {name}}` }).then((res) => (this.setState({ categories: res.data.categories })))
+        apolloClient.query({ query: gql`{currencies{label symbol}}` }).then((res) => (this.setState({ currencies: res.data.currencies })))
     }
 
     render() {
+        const handleCategory = (e) => {
+            this.props.changingCategory(e.target.innerHTML)
+        }
 
-        const headerCategorires = this.state.categories.map(({ name }) => (<li key={name}>{name}</li>))
-
+        const headerCategorires = this.state.categories.map(({ name }) => (<li key={name} onClick={handleCategory}>{name}</li>))
+        const currenc = this.state.currencies.map(({ label, symbol }) => <option value={label}>{symbol} {label}</option>)
         return (
             <header className='header'>
                 <ul className='header__nav'>
@@ -29,7 +38,9 @@ class Header extends Component {
                 </ul>
                 <img src={Logo} alt="header logo" className='header__logo' />
                 <div className='header__action'>
-                    <p className='header__action--currency'>PLN <img src={ArrowDown} alt="arrow down" /></p>
+                    <select name="curr" id="cur">
+                        {currenc}
+                    </select>
                     <img src={Cart} alt="empty cart" className='header__action--cart' />
                 </div>
 
@@ -38,4 +49,8 @@ class Header extends Component {
     }
 }
 
-export default Header;
+const mapStateToPrps = (state) => ({
+    choosenCategories: state.category.category
+})
+
+export default connect(mapStateToPrps, { changingCategory })(Header);
