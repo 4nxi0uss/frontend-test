@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     category: 'all',
+    chosenCurrencies: 0, // 0 means USD
 }
 
 export const headerSlice = createSlice({
@@ -11,9 +12,12 @@ export const headerSlice = createSlice({
         changingCategory: (state, action) => {
             state.category = action.payload
         },
+        changingCurrencies: (state, action) => {
+            state.chosenCurrencies = action.payload
+        },
     },
 })
 
-export const { changingCategory } = headerSlice.actions
+export const { changingCategory, changingCurrencies } = headerSlice.actions
 
 export default headerSlice.reducer
