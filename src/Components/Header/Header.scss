@@ -1,6 +1,6 @@
 .header {
+    position: absolute;
     display: flex;
-    position: relative;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -9,6 +9,7 @@
     transform: translate(-50%);
     width: 100%;
     padding: 0 9rem;
+    z-index: 1;
 
     &__nav {
         display: flex;
@@ -43,6 +44,7 @@
     }
 
     &__action {
+        position: relative;
         display: flex;
         flex-direction: row;
         gap: 1.5rem;
