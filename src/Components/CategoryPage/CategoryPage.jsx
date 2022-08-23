@@ -24,16 +24,22 @@ class CategoryPage extends Component {
     }
 
     componentDidMount() {
-        apolloClient.query({
-            query: gql`${CATEGORY_QUERY}`, variables: { "cat": this.props.ChoosenCategory }
-        }).then((res) => (this.setState({ products: res.data.category.products })))
+        apolloClient
+            .query({
+                query: gql`${CATEGORY_QUERY}`, variables: { "cat": this.props.ChoosenCategory }
+            })
+            .then((res) => (this.setState({ products: res.data.category.products })))
+            .catch(err => console.warn(err))
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.ChoosenCategory === this.props.ChoosenCategory) return null
-        apolloClient.query({
-            query: gql`${CATEGORY_QUERY}`, variables: { "cat": this.props.ChoosenCategory }
-        }).then((res) => (this.setState({ products: res.data.category.products })))
+        apolloClient
+            .query({
+                query: gql`${CATEGORY_QUERY}`, variables: { "cat": this.props.ChoosenCategory }
+            })
+            .then((res) => (this.setState({ products: res.data.category.products })))
+            .catch(err => console.warn(err))
     }
 
     render() {
