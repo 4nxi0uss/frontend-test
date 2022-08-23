@@ -3,12 +3,13 @@ import React, { Component } from 'react';
 import './ProductCard.scss'
 
 import addToCart from '../../../../img/add-to-cart.svg'
+import { connect } from 'react-redux';
 
 class ProductCard extends Component {
     state = {}
 
     render() {
-        const { name, inStock, gallery, brand, prices } = this.props
+        const { name, inStock, gallery, brand, prices, currencyIndex } = this.props
 
         const handleAddToCart = (e) => {
             console.log(e)
@@ -22,9 +23,13 @@ class ProductCard extends Component {
                 {inStock && <img src={addToCart} alt="add to cart" className={`product-card__add-to-cart`} onClick={handleAddToCart} />}
             </div>
             <p className={`product-card__title ${!inStock && ' product-card__out-of-stock-text'}`}>{brand} {name}</p>
-            <p className={`product-card__price ${!inStock && ' product-card__out-of-stock-text'}`}>{prices[0].currency.symbol}{prices[0].amount}</p>
+            <p className={`product-card__price ${!inStock && ' product-card__out-of-stock-text'}`}>{prices[currencyIndex].currency.symbol}{prices[currencyIndex].amount}</p>
         </article>);
     }
 }
 
-export default ProductCard;
+const mapStateToPrps = (state) => ({
+    currencyIndex: state.category.chosenCurrencies
+})
+
+export default connect(mapStateToPrps)(ProductCard);
