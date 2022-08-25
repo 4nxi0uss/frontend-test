@@ -1,30 +1,45 @@
 import React, { Component } from 'react';
+import { Navigate } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import './ProductCard.scss'
 
 import addToCart from '../../../../img/add-to-cart.svg'
-import { connect } from 'react-redux';
+
+import { changingCardId } from '../../productSlice';
 
 class ProductCard extends Component {
-    state = {}
+    state = {
+        productFlag: false
+    }
+
+    componentDidMount() {
+        this.setState({ productFlag: false })
+    }
 
     render() {
-        const { name, inStock, gallery, brand, prices, currencyIndex } = this.props
+        const { name, inStock, gallery, brand, prices, id, currencyIndex, changingCardId } = this.props
+
+        const { productFlag } = this.state
 
         const handleAddToCart = (e) => {
-            console.log(e)
+            console.log('cart', e)
         }
 
-        return (<article className={`product-card `}>
-            <div className={`product-card__div-img ${!inStock && ' product-card__out-of-stock-img'}`}>
-                <img src={gallery[0]} alt="img" className={`product-card__div-img__img `} />
-                {!inStock && <p className={`product-card__div-img__text`}>out of stock</p>}
+        return (
+            <>
+                {productFlag && <Navigate to={`/product-page/?id=${id}`} />}
+                <article className={`product-card `} onClick={() => { changingCardId(id); this.setState({ productFlag: true }) }}>
+                    <div className={`product-card__div-img ${!inStock && ' product-card__out-of-stock-img'}`}>
+                        <img src={gallery[0]} alt="img" className={`product-card__div-img__img `} />
+                        {!inStock && <p className={`product-card__div-img__text`}>out of stock</p>}
 
-                {inStock && <img src={addToCart} alt="add to cart" className={`product-card__add-to-cart`} onClick={handleAddToCart} />}
-            </div>
-            <p className={`product-card__title ${!inStock && ' product-card__out-of-stock-text'}`}>{brand} {name}</p>
-            <p className={`product-card__price ${!inStock && ' product-card__out-of-stock-text'}`}>{prices[currencyIndex].currency.symbol}{prices[currencyIndex].amount}</p>
-        </article>);
+                        {inStock && <img src={addToCart} alt="add to cart" className={`product-card__add-to-cart`} onClick={handleAddToCart} />}
+                    </div>
+                    <p className={`product-card__title ${!inStock && ' product-card__out-of-stock-text'}`}>{brand} {name}</p>
+                    <p className={`product-card__price ${!inStock && ' product-card__out-of-stock-text'}`}>{prices[currencyIndex].currency.symbol}{prices[currencyIndex].amount}</p>
+                </article>
+            </>);
     }
 }
 
@@ -32,4 +47,4 @@ const mapStateToPrps = (state) => ({
     currencyIndex: state.category.chosenCurrencies
 })
 
-export default connect(mapStateToPrps)(ProductCard);
+export default connect(mapStateToPrps, { changingCardId })(ProductCard);
