@@ -19,14 +19,14 @@
         list-style: none;
         height: 100%;
 
-        li {
+        .NavLink {
             position: relative;
             height: calc(50% + .5rem);
-            text-align: center;
             text-transform: uppercase;
             font-size: 1rem;
             font-weight: 400;
-            align-items: center;
+            text-decoration: none;
+            color: #1D1F22;
             border-bottom: 2px solid transparent;
             cursor: pointer;
 

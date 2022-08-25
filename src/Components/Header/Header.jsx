@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import './Header.scss'
 
@@ -27,11 +28,13 @@ class Header extends Component {
 
     render() {
 
+        const { categories } = this.state
+
         const handleCategory = (e) => {
-            this.props.changingCategory(e.target.innerHTML)
+            this.props.changingCategory(e.target.innerHTML.trim())
         }
 
-        const headerCategorires = this.state.categories.map(({ name }) => (<li key={name} onClick={handleCategory}>{name}</li>))
+        const headerCategorires = categories.map(({ name }) => (<NavLink className={`NavLink`} key={name} onClick={handleCategory} to={'/'}>{name}</NavLink>))
 
         return (
             <>
@@ -39,7 +42,7 @@ class Header extends Component {
                     <ul className='header__nav'>
                         {headerCategorires}
                     </ul>
-                    <img src={Logo} alt="header logo" className='header__logo' />
+                    <NavLink to={'/'}> <img src={Logo} alt="header logo" className='header__logo' /></NavLink>
                     <div className='header__action'>
                         <CurrencyMenu />
                         <img src={Cart} alt="empty cart" className='header__action--cart' />
