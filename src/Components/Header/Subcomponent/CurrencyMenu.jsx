@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 
 import './CurrencyMenu.scss'
 
@@ -10,6 +10,14 @@ import { connect } from 'react-redux';
 import { changingCurrencies } from '../headerSlice';
 
 class CurrencyMenu extends Component {
+    constructor(props) {
+        super(props);
+
+        this.dropDownMenuRef = createRef()
+        this.currencySymbolRef = createRef()
+        this.handleOut = this.handleOut?.bind(this)
+    }
+
     state = {
         currencies: [],
         currencyFlag: false,
@@ -20,28 +28,44 @@ class CurrencyMenu extends Component {
             .query({ query: gql`{currencies{label symbol}}` })
             .then((res) => (this.setState({ currencies: res.data.currencies })))
             .catch(err => console.warn(err))
+
+        document.addEventListener('mousedown', this.handleOut)
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleOut)
+    }
+
+    handleOut = (e) => {
+        if (this.state.currencyFlag && !!this.dropDownMenuRef && !!this.currencySymbolRef && !this.dropDownMenuRef.current?.contains(e.target) && !this.currencySymbolRef.current?.contains(e.target)) { this.setState({ currencyFlag: false }) }
+    }
+
+    handleChooseCurency = (index) => {
+        this.props.changingCurrencies(index)
+        this.setState({ currencyFlag: false })
+    }
+
+    handleToogleMenu = () => {
+        this.setState({ currencyFlag: !this.state.currencyFlag })
     }
 
     render() {
 
-        const { currencyIndex, changingCurrencies } = this.props
+        const { handleChooseCurency, handleToogleMenu } = this
+
+        const { currencyIndex } = this.props
 
         const { currencies, currencyFlag } = this.state
-
-        const handleChooseCurency = (index) => {
-            changingCurrencies(index)
-            this.setState({ currencyFlag: false })
-        }
 
         const currencyList = currencies.map(({ label, symbol }, index) => <p key={label} onClick={() => { handleChooseCurency(index) }}>{symbol} {label}</p>)
 
         return (
             <>
-                <div className={'currency-menu'} onClick={() => { this.setState({ currencyFlag: !currencyFlag }) }}>
+                <div ref={this.currencySymbolRef} className={'currency-menu'} onClick={handleToogleMenu}>
                     <p className={`currency-menu__currency-symbol`}>{currencies[currencyIndex]?.symbol}</p>
                     <img src={ArrowDown} alt="" className={`currency-menu__currency-arrow`} />
                 </div>
-                {currencyFlag && <div className={`currency-list`}>
+                {currencyFlag && <div ref={this.dropDownMenuRef} className={`currency-list`} >
                     {currencyList}
                 </div>}
             </>
