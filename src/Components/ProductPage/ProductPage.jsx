@@ -1,10 +1,11 @@
-import { gql } from '@apollo/client';
 import React, { Component } from 'react';
-import { createElement } from 'react';
-import { connect } from 'react-redux';
-import { apolloClient } from '../../Apollo/client';
 
 import './ProductPage.scss'
+
+import { connect } from 'react-redux';
+
+import { gql } from '@apollo/client';
+import { apolloClient } from '../../Apollo/client';
 
 const CATEGORY_QUERY = `query getProducts($id: String!) {
     product(id: $id) {
@@ -25,56 +26,79 @@ const CATEGORY_QUERY = `query getProducts($id: String!) {
         }
       }
       prices {
-        currency{
-  label
-  symbol
-  }
+        currency {
+          label
+          symbol
+        }
         amount
       }
       brand
     }
-  }  
+  }
   `
 
 class ProductPage extends Component {
 
     state = {
         product: {},
-        choosenthumbnail: 0
+        choosenthumbnail: 0,
+        choosenAttributes: {},
+        search: ''
+
     }
-    // "xbox-series-s"
-    // "ps-5"
     componentDidMount() {
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "id": "ps-5" }
+                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId }
             })
             .then((res) => (this.setState({ product: res.data.product })))
             .catch(err => console.warn(err))
+
+        let par = ((new URL(document.location)).searchParams)
+        this.setState({ search: par.get('id') })
+    }
+
+    componentDidUpdate(prevState, prevProps) {
+        if (prevProps.search === this.state.search) return null
+
+        let par = ((new URL(document.location)).searchParams)
+        this.setState({ search: par.get('id') })
+    }
+
+    componentWillUnmount() {
+        this.setState({
+            product: {},
+            choosenthumbnail: 0,
+            choosenAttributes: {},
+            search: ''
+        })
     }
 
     render() {
-        const { gallery, brand, name, inStock, description, prices, attributes, id } = this.state.product
 
-        const { choosenthumbnail } = this.state
+        const { gallery, brand, name, inStock, description, prices, attributes } = this.state?.product
+
+        const { choosenthumbnail, choosenAttributes } = this.state
 
         const { currencyIndex } = this.props
 
-        const showAttributes = () => {
-            return attributes?.map(({ name, id, items, type }) => {
-                return <div className='attributes'>
-                    <p className='attributes__name'>{name}:</p><br />
-                    <div className='attributes__div'>
-                        {items?.map(({ displayValue, id, value }) => (<div key={id} className={type === "swatch" ? `attributes__div__swatch` : `attributes__div__text`} style={{ 'backgroundColor': `${value}` }}>{type === "swatch" ? "" : displayValue}</div>))}
-                    </div>
-                </div>
-            })
+        const handleChooseAtribiute = (name, value) => {
+            this.setState({ choosenAttributes: { ...choosenAttributes, [name]: value } })
         }
 
-        // console.log(description)
-        console.log(attributes)
-        // console.log(prices)
-        // console.log(gallery?.[0])
+        const showAttributes = () => (attributes?.map(({ name, id, items, type }) => (
+            <div key={id} className='attributes'>
+
+                <p className='attributes__name'>{name}:</p>
+
+                <ul className='attributes__div'>
+                    {items?.map(({ displayValue, id, value }) => (
+                        <li onClick={() => { handleChooseAtribiute(name, id) }} key={id} className={`attributes__div__${type} ${choosenAttributes[name] === id && "attributes__div__" + type + "--active"}`} style={{
+                            'backgroundColor': `${value}`
+                        }}>{type !== "swatch" && displayValue}</li>))}
+                </ul>
+            </div>)
+        ))
 
         const thumbnails = gallery?.map((el, index) => <img className={`product-page__thumbnails__thumbnails-img`} key={el} src={el} alt="" onClick={() => this.setState({ choosenthumbnail: index })} />)
 
@@ -82,6 +106,7 @@ class ProductPage extends Component {
             <div className={`product-page__thumbnails`}>
                 {thumbnails}
             </div>
+
             <div className={`product-page__img-div`}>
                 <img className={`product-page__img-div__main-img`} src={gallery?.[choosenthumbnail]} alt="" />
             </div>
@@ -92,12 +117,12 @@ class ProductPage extends Component {
 
                 {showAttributes()}
 
-                <p className={`product-page__text__price`}>price</p>
-                <p className={`product-page__text__amount`}>{prices?.[currencyIndex]?.currency.symbol} {prices?.[currencyIndex]?.amount}</p>
+                <p className={`product-page__text__price`}>price:</p>
+                <p className={`product-page__text__amount`}>{prices?.[currencyIndex]?.currency.symbol}{prices?.[currencyIndex]?.amount}</p>
 
                 <button className={`product-page__text__btn`}>add to cart</button>
 
-                <div dangerouslySetInnerHTML={{ __html: description }}></div>
+                <div className={`product-page__text__description`} dangerouslySetInnerHTML={{ __html: description }}></div>
 
             </div>
 
@@ -106,7 +131,8 @@ class ProductPage extends Component {
 }
 
 const mapStateToPrps = (state) => ({
-    currencyIndex: state.category.chosenCurrencies
+    currencyIndex: state.category.chosenCurrencies,
+    cartId: state.product.cartId
 })
 
 export default connect(mapStateToPrps)(ProductPage);
