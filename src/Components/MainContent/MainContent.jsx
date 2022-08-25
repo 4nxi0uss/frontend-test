@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 import './MainContent.scss'
 
 import CategoryPage from '../CategoryPage/CategoryPage';
-import { Route, Routes } from 'react-router-dom';
 import ProductPage from '../ProductPage/ProductPage';
 
 class MainContent extends Component {
