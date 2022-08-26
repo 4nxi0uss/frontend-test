@@ -6,7 +6,7 @@ import './ProductCard.scss'
 
 import addToCart from '../../../../img/add-to-cart.svg'
 
-import { changingCardId } from '../../productSlice';
+import { changingCardId } from '../../cartSlice';
 
 class ProductCard extends Component {
     state = {
@@ -42,7 +42,6 @@ class ProductCard extends Component {
             </>);
     }
 }
-
 const mapStateToPrps = (state) => ({
     currencyIndex: state.category.chosenCurrencies
 })
