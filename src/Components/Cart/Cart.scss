@@ -1,0 +1,56 @@
+.cart {
+    position: relative;
+    padding: 0 0 10rem 0;
+    top: 5rem;
+    // bottom: 10rem;
+
+    &__title {
+        position: relative;
+        font-family: 'Raleway';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 2rem;
+        // font-size: 2rem;
+        line-height: 40px;
+        text-transform: uppercase;
+    }
+
+    &__summary {
+        position: relative;
+        width: 17.5rem;
+
+        &__tax {
+            position: relative;
+            text-transform: capitalize;
+            margin-bottom: .5rem;
+        }
+
+        &__quantity {
+            position: relative;
+            text-transform: capitalize;
+            margin-bottom: .5rem;
+        }
+
+        &__total {
+            position: relative;
+            text-transform: capitalize;
+            margin-bottom: 1rem;
+        }
+
+        &__order-btn {
+            position: relative;
+            font-family: 'Raleway';
+            font-style: normal;
+            font-weight: 600;
+            font-size: .87rem;
+            line-height: 120%;
+            color: white;
+            text-transform: uppercase;
+            width: 100%;
+            padding: 1rem 0;
+            background: #5ECE7B;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+    }
+}

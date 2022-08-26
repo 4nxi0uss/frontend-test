@@ -5,6 +5,7 @@ import './MainContent.scss'
 
 import CategoryPage from '../CategoryPage/CategoryPage';
 import ProductPage from '../ProductPage/ProductPage';
+import Cart from '../Cart/Cart';
 
 class MainContent extends Component {
 
@@ -13,6 +14,7 @@ class MainContent extends Component {
             <Routes>
                 <Route path='/' element={<CategoryPage />} />
                 <Route path='/product-page' element={<ProductPage />} />
+                <Route path='/cart' element={<Cart />} />
             </Routes>
         </main>);
     }
