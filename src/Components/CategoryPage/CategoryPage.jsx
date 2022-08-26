@@ -44,7 +44,7 @@ class CategoryPage extends Component {
 
     render() {
 
-        const products = this.state.products.map(({ name, brand, inStock, gallery, id, prices }) => (<ProductCard key={id} inStock={inStock} name={name} brand={brand} gallery={gallery} prices={prices} />))
+        const products = this.state.products.map(({ name, brand, inStock, gallery, id, prices }) => (<ProductCard key={id} inStock={inStock} id={id} name={name} brand={brand} gallery={gallery} prices={prices} />))
 
         return (<section className='category-page'>
             <h1 className='category-page__title'>{this.props.ChoosenCategory}</h1>
