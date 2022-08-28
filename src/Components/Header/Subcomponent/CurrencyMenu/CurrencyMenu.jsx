@@ -3,11 +3,11 @@ import React, { Component, createRef } from 'react';
 import './CurrencyMenu.scss'
 
 import { gql } from '@apollo/client';
-import { apolloClient } from '../../../Apollo/client';
+import { apolloClient } from '../../../../Apollo/client';
 
-import ArrowDown from '../../../img/arrow-down.svg'
+import ArrowDown from '../../../../img/arrow-down.svg'
 import { connect } from 'react-redux';
-import { changingCurrencies } from '../headerSlice';
+import { changingCurrencies } from '../../headerSlice';
 
 class CurrencyMenu extends Component {
     constructor(props) {
