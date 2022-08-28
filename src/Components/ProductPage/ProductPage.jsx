@@ -37,29 +37,62 @@ const CATEGORY_QUERY = `query getProducts($id: String!) {
   }
   `
 
+export const showAttributes = (attributes, choosenAttributes, handleChooseAtribiute) => (attributes?.map(({ name, id, items, type }) => (
+    <div key={id} className='attributes'>
+
+        <p className='attributes__name'>{name}:</p>
+
+        <ul className='attributes__div'>
+            {items?.map(({ displayValue, id, value }) => (
+                <li onClick={() => { handleChooseAtribiute(name, id) }} key={id} className={`attributes__div__${type} ${choosenAttributes[name] === id && "attributes__div__" + type + "--active"}`} style={{
+                    'backgroundColor': `${value}`
+                }}>{type !== "swatch" && displayValue}</li>))}
+        </ul>
+    </div>)
+))
+
 class ProductPage extends Component {
+    constructor(props) {
+        super(props)
+
+        this.handleAddProductToCart = this.handleAddProductToCart.bind(this)
+    }
 
     state = {
         product: {},
         choosenthumbnail: 0,
         choosenAttributes: {},
         search: ''
-
     }
+
     componentDidMount() {
+        try {
+
+            apolloClient
+                .query({
+                    query: gql`${CATEGORY_QUERY}`, variables: { "id": localStorage.getItem('cart') }
+                    // query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId !== '' ? this.props.cartId : this.state.search }
+                })
+                .then((res) => (this.setState({ product: res.data.product })))
+                .catch(err => console.warn(err))
+
+            let par = ((new URL(document.location)).searchParams)
+            this.setState({ search: par.get('id') })
+        } catch (error) {
+
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.search === this.state.search) return null
+
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId }
+                query: gql`${CATEGORY_QUERY}`, variables: { "id": localStorage.getItem('cart') }
+                // query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId !== '' ? this.props.cartId : this.state.search }
             })
             .then((res) => (this.setState({ product: res.data.product })))
             .catch(err => console.warn(err))
-
-        let par = ((new URL(document.location)).searchParams)
-        this.setState({ search: par.get('id') })
-    }
-
-    componentDidUpdate(prevState, prevProps) {
-        if (prevProps.search === this.state.search) return null
 
         let par = ((new URL(document.location)).searchParams)
         this.setState({ search: par.get('id') })
@@ -74,31 +107,45 @@ class ProductPage extends Component {
         })
     }
 
+    handleAddProductToCart() {
+        try {
+            const tes = JSON.parse(localStorage.getItem('products')) ?? ''
+
+            const isAttribiuteEquale = !!tes && tes.find(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes));
+
+            if (!!this.state.choosenAttributes && !isAttribiuteEquale) {
+                localStorage.setItem('products', JSON.stringify([...tes, { id: this.state.search, attributes: this.state.choosenAttributes, quantity: 1, prices: this.state.product.prices }]))
+            } else {
+                const tess = tes.findIndex(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes))
+
+                tes[tess] = { ...tes[tess], quantity: tes[tess].quantity += 1 }
+
+                localStorage.setItem('products', JSON.stringify(tes))
+            }
+        } catch (error) {
+            console.warn(error)
+        }
+    }
+
+
+
     render() {
 
-        const { gallery, brand, name, inStock, description, prices, attributes } = this.state?.product
-
+        const { gallery, brand, name, inStock, description, prices, attributes } = this.state.product
         const { choosenthumbnail, choosenAttributes } = this.state
+        // console.log(attributes)
+        // console.log(1, choosenAttributes)
 
-        const { currencyIndex } = this.props
+        const { currencyIndex/*, productList */ } = this.props
 
         const handleChooseAtribiute = (name, value) => {
-            this.setState({ choosenAttributes: { ...choosenAttributes, [name]: value } })
+
+            const stringObjSort = Object
+                .entries({ ...choosenAttributes, [name]: value })
+                .sort((a, b) => a[0].toLocaleLowerCase().localeCompare(b[0].toLocaleLowerCase()))
+
+            this.setState({ choosenAttributes: Object.fromEntries(stringObjSort) })
         }
-
-        const showAttributes = () => (attributes?.map(({ name, id, items, type }) => (
-            <div key={id} className='attributes'>
-
-                <p className='attributes__name'>{name}:</p>
-
-                <ul className='attributes__div'>
-                    {items?.map(({ displayValue, id, value }) => (
-                        <li onClick={() => { handleChooseAtribiute(name, id) }} key={id} className={`attributes__div__${type} ${choosenAttributes[name] === id && "attributes__div__" + type + "--active"}`} style={{
-                            'backgroundColor': `${value}`
-                        }}>{type !== "swatch" && displayValue}</li>))}
-                </ul>
-            </div>)
-        ))
 
         const thumbnails = gallery?.map((el, index) => <img className={`product-page__thumbnails__thumbnails-img`} key={el} src={el} alt="" onClick={() => this.setState({ choosenthumbnail: index })} />)
 
@@ -115,12 +162,12 @@ class ProductPage extends Component {
                 <h2 className={`product-page__text__brand`}>{brand}</h2>
                 <h3 className={`product-page__text__name`}>{name}</h3>
 
-                {showAttributes()}
+                {showAttributes(attributes, choosenAttributes, handleChooseAtribiute)}
 
                 <p className={`product-page__text__price`}>price:</p>
                 <p className={`product-page__text__amount`}>{prices?.[currencyIndex]?.currency.symbol}{prices?.[currencyIndex]?.amount}</p>
 
-                <button className={`product-page__text__btn`}>add to cart</button>
+                <button disabled={!inStock} className={`product-page__text__btn`} onClick={this.handleAddProductToCart}>add to cart</button>
 
                 <div className={`product-page__text__description`} dangerouslySetInnerHTML={{ __html: description }}></div>
 
@@ -132,7 +179,8 @@ class ProductPage extends Component {
 
 const mapStateToPrps = (state) => ({
     currencyIndex: state.category.chosenCurrencies,
-    cartId: state.product.cartId
+    cartId: state.cart.cartId,
+    ProductList: state.product.productList
 })
 
 export default connect(mapStateToPrps)(ProductPage);
