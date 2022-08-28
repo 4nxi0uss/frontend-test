@@ -1,0 +1,24 @@
+.cart-overlay {
+    position: absolute;
+    max-height: 42.5rem;
+    // height: 20rem;
+    width: 20.5rem;
+    background-color: white;
+    border: 1px solid transparent;
+    top: 0;
+    // right: 6rem;
+    left: 54rem;
+    bottom: 0;
+
+}
+
+.test {
+    position: absolute;
+    width: 100vw;
+    left: 50%;
+    right: 0;
+    top: 0rem;
+    transform: translateX(-50%);
+    bottom: 0;
+    background-color: rgba(78, 78, 78, 0.274);
+}
