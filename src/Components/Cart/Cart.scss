@@ -1,8 +1,9 @@
+$summary_number: 6.5rem;
+
 .cart {
     position: relative;
     padding: 0 0 10rem 0;
     top: 5rem;
-    // bottom: 10rem;
 
     &__title {
         position: relative;
@@ -10,31 +11,61 @@
         font-style: normal;
         font-weight: 700;
         font-size: 2rem;
-        // font-size: 2rem;
         line-height: 40px;
         text-transform: uppercase;
+        margin-bottom: 5rem;
     }
 
     &__summary {
         position: relative;
         width: 17.5rem;
+        margin-top: 2rem;
+        font-size: 1.5rem;
+        font-weight: 400;
+        line-height: 28px;
 
         &__tax {
             position: relative;
             text-transform: capitalize;
             margin-bottom: .5rem;
+
+            &__amount {
+                position: absolute;
+                left: $summary_number;
+                font-size: 1.5rem;
+                font-weight: 700;
+                line-height: 28px;
+
+            }
         }
 
         &__quantity {
             position: relative;
             text-transform: capitalize;
             margin-bottom: .5rem;
+
+            &__amount {
+                position: absolute;
+                left: $summary_number;
+                font-size: 1.5rem;
+                font-weight: 700;
+                line-height: 28px;
+            }
         }
 
         &__total {
             position: relative;
             text-transform: capitalize;
             margin-bottom: 1rem;
+            font-weight: 500;
+
+            &__amount {
+                position: absolute;
+                left: $summary_number;
+                font-size: 1.5rem;
+                font-weight: 700;
+                line-height: 28px;
+            }
         }
 
         &__order-btn {
