@@ -10,9 +10,9 @@ import { connect } from 'react-redux';
 import { changingCategory } from './headerSlice';
 
 import Logo from '../../img/logo-header.svg'
-import Cart from '../../img/cart-empty.svg'
 
-import CurrencyMenu from './Subcomponent/CurrencyMenu';
+import CurrencyMenu from './Subcomponent/CurrencyMenu/CurrencyMenu';
+import CartOverlay from './Subcomponent/CartOverlay/CartOverlay';
 
 class Header extends Component {
     state = {
@@ -45,7 +45,7 @@ class Header extends Component {
                     <NavLink to={'/'}> <img src={Logo} alt="header logo" className='header__logo' /></NavLink>
                     <div className='header__action'>
                         <CurrencyMenu />
-                        <img src={Cart} alt="empty cart" className='header__action--cart' />
+                        <CartOverlay />
                     </div>
                 </header>
             </>
