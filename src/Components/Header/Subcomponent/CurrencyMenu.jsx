@@ -42,6 +42,7 @@ class CurrencyMenu extends Component {
 
     handleChooseCurency = (index) => {
         this.props.changingCurrencies(index)
+        localStorage.setItem('currencieIndex', index)
         this.setState({ currencyFlag: false })
     }
 

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     category: 'all',
-    chosenCurrencies: 0, // 0 means USD
+    chosenCurrencies: Number(localStorage.getItem('currencieIndex')),
 }
 
 export const headerSlice = createSlice({
