@@ -11,17 +11,9 @@ import { connect } from 'react-redux';
 
 const CATEGORY_QUERY = `query getProducts($id: String!) {
     product(id: $id) {
-      id
-      name
-      gallery
-      attributes {
-        id
-        name
-        type
-        items {
-          displayValue
-          value
-          id
+      id name gallery attributes {
+        id name type items {
+          displayValue value id
         }
       }
       prices {
@@ -31,8 +23,7 @@ const CATEGORY_QUERY = `query getProducts($id: String!) {
         amount
       }
       brand
-    }
-  } `
+    } } `
 
 class ProductRow extends Component {
     constructor(props) {
@@ -68,10 +59,9 @@ class ProductRow extends Component {
         }
     }
 
-
     render() {
 
-        const { currencyIndex, quantity, choosenAttributes } = this.props
+        const { currencyIndex, quantity, choosenAttributes, fun, index } = this.props
 
         const { gallery, brand, name, prices, attributes } = this.state.product
 
@@ -87,9 +77,9 @@ class ProductRow extends Component {
                 </div>
                 <div className={`product__div`}>
                     <div className={`product__div__increase-amount`}>
-                        <button className={`product__div__increase-amount__btn`}>+</button>
+                        <button className={`product__div__increase-amount__btn`} onClick={() => { fun(true, index) }}>+</button>
                         <p className={`product__div__increase-amount__product-amount`}>{quantity}</p>
-                        <button className={`product__div__increase-amount__btn`}>-</button>
+                        <button className={`product__div__increase-amount__btn`} onClick={() => { fun(false, index) }}>-</button>
                     </div>
                     <div className={`product__div__div-img`}>
                         <img src={gallery?.[thumbnailsId]} alt="" className={`product__div__div-img__img`} />

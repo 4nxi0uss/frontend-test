@@ -46,12 +46,14 @@
         position: relative;
         display: flex;
         flex-direction: row;
+        align-items: center;
 
         &__increase-amount {
             position: relative;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            max-height: 18rem;
             height: 100%;
             margin-right: 1.5rem;
 
@@ -80,13 +82,14 @@
 
         &__div-img {
             position: relative;
-            width: 12.5rem;
-            height: 18rem;
+            max-height: 18rem;
+            max-width: 12.5rem;
 
             &__img {
                 position: relative;
                 width: 100%;
                 height: 100%;
+                object-fit: fill;
             }
 
             &__img-switch {
