@@ -6,3 +6,80 @@
         position: relative;
     }
 }
+
+.bag-name {
+    position: relative;
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 160%;
+    margin: 2rem 0 0 1rem;
+
+    &__items {
+        position: relative;
+        font-weight: 500;
+    }
+}
+
+.cost {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: #1d1f22;
+    margin: 1rem;
+
+    &__total {
+        font-family: 'Roboto Condensed';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 18px;
+    }
+
+    &__amount {
+        font-family: 'Raleway';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+    }
+}
+
+.btns {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 2rem 1rem 2rem 1rem;
+
+    &__view {
+        position: relative;
+        width: 8.75rem;
+        height: 2.68rem;
+        font-style: normal;
+        font-weight: 600;
+        font-size: .87rem;
+        line-height: 120%;
+        text-transform: uppercase;
+        background: #FFFFFF;
+        border: 1px solid #1D1F22;
+        color: #1D1F22;
+        cursor: pointer;
+    }
+
+    &__check {
+        position: relative;
+        width: 8.75rem;
+        height: 2.68rem;
+        font-style: normal;
+        font-weight: 600;
+        font-size: .87rem;
+        line-height: 120%;
+        text-transform: uppercase;
+        background: #5ECE7B;
+        border: 1px solid transparent;
+        color: white;
+        cursor: pointer;
+    }
+}

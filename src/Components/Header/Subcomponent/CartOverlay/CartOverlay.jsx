@@ -4,46 +4,62 @@ import './CartOverlay.scss'
 
 import cartImg from '../../../../img/cart-empty.svg'
 import Modal from '../../../Modal/Modal';
-import ProductRow from '../../../Cart/Subcomponent/ProductRow/ProductRow';
+import ProductRowOverlay from '../ProductRowOverlay/ProductRowOverlay';
+
+import { connect } from 'react-redux';
+import { changingCategory } from '../../headerSlice';
+import { decrementQuantity, incrementQuantity, removeProduct } from '../../../ProductPage/productSlice';
+
+import { apolloClient } from '../../../../Apollo/client';
+import { gql } from '@apollo/client';
+
+import { getTotalCost, getTotalQuantity } from '../../../../Utilities/Utilities';
 
 class CartOverlay extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
     state = {
         cartFlag: false,
-        porductlist: []
+        currencies: {}
     }
 
     componentDidMount() {
-        try {
-            this.setState({ porductlist: JSON.parse(localStorage.getItem('products')) })
-        } catch (error) {
-
-        }
+        apolloClient
+            .query({
+                query: gql`{ currencies{label symbol}}`, variables: { id: this.props.id }
+            })
+            .then((res) => (this.setState({ currencies: res.data.currencies })))
+            .catch(err => console.warn(err))
     }
-    render() {
-        const { cartFlag, porductlist } = this.state
-        console.log(cartFlag)
-        console.log(porductlist)
 
-        const prod = porductlist.map(({ id, attributes, prices, quantity }) => <ProductRow id={id} attributes={attributes} quantity={quantity} />)
+    render() {
+        const { cartFlag, currencies } = this.state
+        const { currencyIndex, productList } = this.props
+
+        const prod = productList?.map(({ id, attributes, quantity }, index) => <ProductRowOverlay key={JSON.stringify(attributes)} id={id} choosenAttributes={attributes} quantity={quantity} index={index} />)
 
         return (
             <>
                 <div className={`cart-icon`}>
                     <img src={cartImg} alt="" className={`cart-icon__img`} onClick={() => { this.setState({ cartFlag: !cartFlag }) }} />
+                    <span>{getTotalQuantity(productList)}</span>
                 </div>
+
                 <Modal isOpen={cartFlag} >
-                    <p>My bag, <span>3 items</span></p>
+                    <p className={`bag-name`}>My bag, <span className={`bag-name__items`}>{getTotalQuantity()} items</span></p>
                     {prod}
-                    <div><p>Total</p> <p>200</p></div>
-                    <button>view bag</button>
-                    <button>check out</button>
+                    <div className={`cost`}><p className={`cost__total`}>Total</p> <p className={`cost__amount`}>{currencies?.[currencyIndex]?.symbol}{getTotalCost(productList, currencyIndex)}</p></div>
+                    <div className={`btns`}>
+                        <button className={`btns__view`}>view bag</button>
+                        <button className={`btns__check`}>check out</button>
+                    </div>
                 </Modal>
             </>
         );
     }
 }
 
-export default CartOverlay;
+const mapStateToPrps = (state) => ({
+    currencyIndex: state.category.chosenCurrencies,
+    productList: state.product.productList
+})
+
+export default connect(mapStateToPrps, { changingCategory, incrementQuantity, decrementQuantity, removeProduct })(CartOverlay);
