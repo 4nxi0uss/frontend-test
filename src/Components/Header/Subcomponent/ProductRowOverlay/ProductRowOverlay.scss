@@ -1,0 +1,170 @@
+.product-overlay {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1rem;
+
+    &__details {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        max-width: 8.5rem;
+
+        &__brand {
+            position: relative;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 1rem;
+            line-height: 27px;
+            margin-bottom: .25rem;
+        }
+
+        &__price {
+            position: relative;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 1rem;
+            line-height: 24px;
+            margin-bottom: .5rem;
+        }
+    }
+
+    &__div {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        &__increase-amount {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            max-height: 12rem;
+            height: 100%;
+            margin-right: 1.5rem;
+
+            &__btn {
+                position: relative;
+                font-size: .8rem;
+                font-weight: 100;
+                line-height: 10%;
+                height: 1.5rem;
+                width: 1.5rem;
+                background-color: white;
+                color: #1D1F22;
+                border: 1px solid #1D1F22;
+                cursor: pointer;
+            }
+
+            &__product-amount {
+                position: relative;
+                text-align: center;
+                font-style: normal;
+                font-weight: 500;
+                font-size: 1rem;
+                line-height: 160%;
+            }
+        }
+
+        &__div-img {
+            position: relative;
+            max-height: 12rem;
+            max-width: 7.5rem;
+
+            &__img {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                object-fit: fill;
+            }
+
+            &__img-switch {
+                position: absolute;
+                gap: .5rem;
+                right: .5rem;
+                bottom: .5rem;
+
+                &__btn {
+                    position: relative;
+                    color: white;
+                    width: 1rem;
+                    height: 1rem;
+                    background: rgba(0, 0, 0, 0.73);
+                    border: 1px solid transparent;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+.attributes-overlay {
+    position: relative;
+    z-index: 1;
+
+    &__name {
+        position: relative;
+        font-style: normal;
+        font-weight: 400;
+        font-size: .875rem;
+        text-transform: uppercase;
+        width: 100%;
+        margin-bottom: .5rem;
+    }
+
+    &__div {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: .8rem;
+        width: 100%;
+        margin-bottom: .5rem;
+
+        &__swatch {
+            box-sizing: border-box;
+            position: relative;
+            display: inline-block;
+            height: 1rem;
+            width: 1rem;
+            border: 1px solid grey;
+            content: " ";
+            max-width: 100%;
+            list-style: none;
+
+            &--active::after {
+                position: relative;
+                display: inline-block;
+                height: 1.25rem;
+                width: 1.25rem;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                content: " ";
+                border: 1px solid #5ECE7B;
+                z-index: -1;
+            }
+        }
+
+        &__text {
+            position: relative;
+            font-size: .875rem;
+            font-weight: 400;
+            color: #1D1F22;
+            border: 1px solid #1D1F22;
+            padding: .15rem .25rem;
+            max-width: 100%;
+            list-style: none;
+            text-align: center;
+
+            &--active {
+                color: white;
+                background-color: #1D1F22;
+            }
+        }
+
+    }
+}
