@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { gql } from '@apollo/client';
 import { apolloClient } from '../../Apollo/client';
 
+import { addProductToList, incrementQuantity } from './productSlice';
+
 const CATEGORY_QUERY = `query getProducts($id: String!) {
     product(id: $id) {
       id
@@ -44,7 +46,7 @@ export const showAttributes = (attributes, choosenAttributes, handleChooseAtribi
 
         <ul className='attributes__div'>
             {items?.map(({ displayValue, id, value }) => (
-                <li onClick={() => { handleChooseAtribiute(name, id) }} key={id} className={`attributes__div__${type} ${choosenAttributes[name] === id && "attributes__div__" + type + "--active"}`} style={{
+                <li onClick={() => { handleChooseAtribiute(name, id) }} key={id} className={`attributes__div__${type} ${choosenAttributes?.[name] === id && "attributes__div__" + type + "--active"}`} style={{
                     'backgroundColor': `${value}`
                 }}>{type !== "swatch" && displayValue}</li>))}
         </ul>
@@ -66,21 +68,15 @@ class ProductPage extends Component {
     }
 
     componentDidMount() {
-        try {
+        apolloClient
+            .query({
+                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId }
+            })
+            .then((res) => (this.setState({ product: res.data.product })))
+            .catch(err => console.warn(err))
 
-            apolloClient
-                .query({
-                    query: gql`${CATEGORY_QUERY}`, variables: { "id": localStorage.getItem('cart') }
-                    // query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId !== '' ? this.props.cartId : this.state.search }
-                })
-                .then((res) => (this.setState({ product: res.data.product })))
-                .catch(err => console.warn(err))
-
-            let par = ((new URL(document.location)).searchParams)
-            this.setState({ search: par.get('id') })
-        } catch (error) {
-
-        }
+        let par = ((new URL(document.location)).searchParams)
+        this.setState({ search: par.get('id') })
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -88,8 +84,7 @@ class ProductPage extends Component {
 
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "id": localStorage.getItem('cart') }
-                // query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId !== '' ? this.props.cartId : this.state.search }
+                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId }
             })
             .then((res) => (this.setState({ product: res.data.product })))
             .catch(err => console.warn(err))
@@ -108,41 +103,34 @@ class ProductPage extends Component {
     }
 
     handleAddProductToCart() {
-        try {
-            const tes = JSON.parse(localStorage.getItem('products')) ?? ''
+        const { productList, addProductToList, incrementQuantity } = this.props
 
-            const isAttribiuteEquale = !!tes && tes.find(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes));
+        const isAttribiuteEquale = productList?.find(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes));
 
-            if (!!this.state.choosenAttributes && !isAttribiuteEquale) {
-                localStorage.setItem('products', JSON.stringify([...tes, { id: this.state.search, attributes: this.state.choosenAttributes, quantity: 1, prices: this.state.product.prices }]))
-            } else {
-                const tess = tes.findIndex(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes))
+        if (!!this.state.choosenAttributes && !isAttribiuteEquale) {
 
-                tes[tess] = { ...tes[tess], quantity: tes[tess].quantity += 1 }
+            addProductToList({ id: this.state.search, attributes: this.state.choosenAttributes, quantity: 1, prices: this.state.product.prices })
 
-                localStorage.setItem('products', JSON.stringify(tes))
-            }
-        } catch (error) {
-            console.warn(error)
+        } else {
+            const productindex = productList?.findIndex(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes))
+
+            incrementQuantity(productindex)
         }
     }
-
-
 
     render() {
 
         const { gallery, brand, name, inStock, description, prices, attributes } = this.state.product
-        const { choosenthumbnail, choosenAttributes } = this.state
-        // console.log(attributes)
-        // console.log(1, choosenAttributes)
 
-        const { currencyIndex/*, productList */ } = this.props
+        const { choosenthumbnail, choosenAttributes } = this.state
+
+        const { currencyIndex } = this.props
 
         const handleChooseAtribiute = (name, value) => {
 
             const stringObjSort = Object
-                .entries({ ...choosenAttributes, [name]: value })
-                .sort((a, b) => a[0].toLocaleLowerCase().localeCompare(b[0].toLocaleLowerCase()))
+                ?.entries({ ...choosenAttributes, [name]: value })
+                ?.sort((a, b) => a[0]?.toLocaleLowerCase()?.localeCompare(b[0]?.toLocaleLowerCase()))
 
             this.setState({ choosenAttributes: Object.fromEntries(stringObjSort) })
         }
@@ -180,7 +168,7 @@ class ProductPage extends Component {
 const mapStateToPrps = (state) => ({
     currencyIndex: state.category.chosenCurrencies,
     cartId: state.cart.cartId,
-    ProductList: state.product.productList
+    productList: state.product.productList
 })
 
-export default connect(mapStateToPrps)(ProductPage);
+export default connect(mapStateToPrps, { addProductToList, incrementQuantity })(ProductPage);
