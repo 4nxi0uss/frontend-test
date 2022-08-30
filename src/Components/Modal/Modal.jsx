@@ -12,7 +12,6 @@ class Modal extends Component {
         const { children, isOpen } = this.props
 
         if (!isOpen) return null
-        console.log(document.querySelector('main'))
 
         return ReactDOM?.createPortal((
             <>

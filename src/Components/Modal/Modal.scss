@@ -1,15 +1,31 @@
 .cart-overlay {
     position: absolute;
     max-height: 42.5rem;
-    // height: 20rem;
     width: 20.5rem;
     background-color: white;
     border: 1px solid transparent;
     top: 0;
-    // right: 6rem;
     left: 54rem;
     bottom: 0;
+    overflow-y: scroll;
+}
 
+.cart-overlay::-webkit-scrollbar {
+    width: .3rem;
+    background-color: rgb(241, 241, 241);
+}
+
+.cart-overlay::-webkit-scrollbar-thumb {
+    background-color: #5ECE7B;
+    cursor: pointer;
+}
+
+@supports(scrollbar-color: #5ECE7B rgb(241, 241, 241)) {
+    * {
+        scrollbar-color: #5ECE7B rgb(241, 241, 241);
+        scrollbar-width: thin;
+        cursor: pointer;
+    }
 }
 
 .test {
