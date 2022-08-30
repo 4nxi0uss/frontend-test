@@ -42,7 +42,6 @@ class CurrencyMenu extends Component {
 
     handleChooseCurency = (index) => {
         this.props.changingCurrencies(index)
-        localStorage.setItem('currencieIndex', index)
         this.setState({ currencyFlag: false })
     }
 
@@ -58,7 +57,7 @@ class CurrencyMenu extends Component {
 
         const { currencies, currencyFlag } = this.state
 
-        const currencyList = currencies.map(({ label, symbol }, index) => <p key={label} onClick={() => { handleChooseCurency(index) }}>{symbol} {label}</p>)
+        const currencyList = currencies?.map(({ label, symbol }, index) => <p key={label} onClick={() => { handleChooseCurency(index) }}>{symbol} {label}</p>)
 
         return (
             <>
