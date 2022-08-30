@@ -24,12 +24,12 @@ class ProductCard extends Component {
     }
 
     handleOpenPage() {
-        this.props.changingCardId(this.props.id); this.setState({ productFlag: true })
-        localStorage.setItem('cart', this.props.id)
+        this.props.changingCardId(this.props.id);
+        this.setState({ productFlag: true })
     }
 
     render() {
-        const { name, inStock, gallery, brand, prices, id, currencyIndex /*, changingCardId */ } = this.props
+        const { name, inStock, gallery, brand, prices, id, currencyIndex } = this.props
 
         const { productFlag } = this.state
 
@@ -41,7 +41,6 @@ class ProductCard extends Component {
             <>
                 {productFlag && <Navigate to={`/product-page/?id=${id}`} />}
                 <article className={`product-card `} onClick={this.handleOpenPage}>
-                    {/* <article className={`product-card `} onClick={() => { changingCardId(id); this.setState({ productFlag: true }) }}> */}
                     <div className={`product-card__div-img ${!inStock && ' product-card__out-of-stock-img'}`}>
                         <img src={gallery[0]} alt="img" className={`product-card__div-img__img `} />
                         {!inStock && <p className={`product-card__div-img__text`}>out of stock</p>}
