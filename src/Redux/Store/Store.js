@@ -9,4 +9,5 @@ export const store = configureStore({
         cart: cartSlice,
         product: productSlice
     },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware()
 })
