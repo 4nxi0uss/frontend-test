@@ -1,21 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    productList: {
-
-    },
+    productList: JSON.parse(localStorage.getItem('products')) ?? [],
 }
 
 export const productSlice = createSlice({
     name: 'product',
     initialState,
     reducers: {
-        addProductToList: (state, action) => {
-            state.productList = action.payload
-        }
+        addProductToList: (state, { type, payload }) => {
+            state.productList = [...state.productList, payload]
+        },
+        incrementQuantity: (state, { type, payload }) => {
+            state.productList[payload] = { ...state.productList[payload], quantity: state.productList[payload].quantity += 1 }
+        },
+        decrementQuantity: (state, { type, payload }) => {
+            state.productList[payload] = { ...state.productList[payload], quantity: state.productList[payload].quantity -= 1 }
+        },
+        removeProduct: (state, { type, payload }) => {
+            state.productList = state.productList.slice(0, payload)
+        },
     },
 })
 
-export const { addProductToList } = productSlice.actions
+export const { addProductToList, incrementQuantity, decrementQuantity, removeProduct } = productSlice.actions
 
 export default productSlice.reducer
