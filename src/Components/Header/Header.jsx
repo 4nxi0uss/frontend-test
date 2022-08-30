@@ -34,7 +34,7 @@ class Header extends Component {
             this.props.changingCategory(e.target.innerHTML.trim())
         }
 
-        const headerCategorires = categories.map(({ name }) => (<NavLink className={`NavLink ${this.props.ChoosenCategory === name && 'NavLink--active'}`} key={name} onClick={handleCategory} to={'/'}>{name}</NavLink>))
+        const headerCategorires = categories?.map(({ name }) => (<NavLink className={`NavLink ${this.props.ChoosenCategory === name && 'NavLink--active'}`} key={name} onClick={handleCategory} to={'/'}>{name}</NavLink>))
 
         return (
             <>
