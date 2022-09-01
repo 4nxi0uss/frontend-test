@@ -5,6 +5,27 @@
     &__img {
         position: relative;
     }
+
+    &__quantity-item {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        right: 0;
+        top: 0;
+        transform: translate(50%, -50%);
+        font-family: 'Roboto Condensed';
+        font-style: normal;
+        font-weight: 700;
+        font-size: .875rem;
+        line-height: 1rem;
+        color: white;
+        z-index: -1;
+        width: 1.25rem;
+        height: 1.25rem;
+        background-color: black;
+        border-radius: 50%;
+    }
 }
 
 .bag-name {

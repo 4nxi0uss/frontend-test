@@ -38,9 +38,9 @@ class CartOverlay extends Component {
 
         return (
             <>
-                <div className={`cart-icon`}>
-                    <img src={cartImg} alt="" className={`cart-icon__img`} onClick={() => { this.setState({ cartFlag: !cartFlag }) }} />
-                    <span>{getTotalQuantity(productList)}</span>
+                <div className={`cart-icon`} onClick={() => { this.setState({ cartFlag: !cartFlag }) }}>
+                    <img src={cartImg} alt="" className={`cart-icon__img`} />
+                    {Boolean(getTotalQuantity(productList)) && <span className={`cart-icon__quantity-item`}>{getTotalQuantity(productList)}</span>}
                 </div>
 
                 <Modal isOpen={cartFlag} >
