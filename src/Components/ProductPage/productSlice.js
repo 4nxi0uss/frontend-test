@@ -18,7 +18,7 @@ export const productSlice = createSlice({
             state.productList[payload] = { ...state.productList[payload], quantity: state.productList[payload].quantity -= 1 }
         },
         removeProduct: (state, { type, payload }) => {
-            state.productList = state.productList.slice(0, payload)
+            state.productList.splice(payload, 1)
         },
     },
 })
