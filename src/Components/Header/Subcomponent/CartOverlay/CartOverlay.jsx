@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import './CartOverlay.scss'
+import { Link } from 'react-router-dom';
 
 import cartImg from '../../../../img/cart-empty.svg'
 import Modal from '../../../Modal/Modal';
@@ -44,11 +45,11 @@ class CartOverlay extends Component {
                 </div>
 
                 <Modal isOpen={cartFlag} >
-                    <p className={`bag-name`}>My bag, <span className={`bag-name__items`}>{getTotalQuantity()} items</span></p>
+                    <p className={`bag-name`}>My bag, <span className={`bag-name__items`}>{getTotalQuantity(productList)} {getTotalQuantity(productList) === 1 ? `item` : `items`}</span></p>
                     {prod}
                     <div className={`cost`}><p className={`cost__total`}>Total</p> <p className={`cost__amount`}>{currencies?.[currencyIndex]?.symbol}{getTotalCost(productList, currencyIndex)}</p></div>
                     <div className={`btns`}>
-                        <button className={`btns__view`}>view bag</button>
+                        <Link to={`/cart`} className={`btns__view`} onClick={() => { this.setState({ cartFlag: false }); this.setState({ redirectFlag: true }) }}>view bag</Link>
                         <button className={`btns__check`}>check out</button>
                     </div>
                 </Modal>

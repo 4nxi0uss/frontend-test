@@ -76,6 +76,9 @@
 
     &__view {
         position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 8.75rem;
         height: 2.68rem;
         font-style: normal;
@@ -83,6 +86,7 @@
         font-size: .87rem;
         line-height: 120%;
         text-transform: uppercase;
+        text-decoration: none;
         background: #FFFFFF;
         border: 1px solid #1D1F22;
         color: #1D1F22;
