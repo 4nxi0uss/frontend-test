@@ -4,10 +4,7 @@ import ReactDOM from 'react-dom';
 import './Modal.scss'
 
 class Modal extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
-    state = {}
+
     render() {
         const { children, isOpen } = this.props
 
@@ -15,7 +12,7 @@ class Modal extends Component {
 
         return ReactDOM?.createPortal((
             <>
-                <div className='test' />
+                <div className='dimming' />
                 <dialog className={`cart-overlay`} open={isOpen} >
                     {children}
                 </dialog>
