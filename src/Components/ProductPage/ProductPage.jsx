@@ -9,6 +9,8 @@ import { apolloClient } from '../../Apollo/client';
 
 import { addProductToList, incrementQuantity } from './productSlice';
 
+import { Interweave } from 'interweave'
+
 const CATEGORY_QUERY = `query getProducts($id: String!) {
     product(id: $id) {
       id
@@ -157,7 +159,7 @@ class ProductPage extends Component {
 
                 <button disabled={!inStock} className={`product-page__text__btn`} onClick={this.handleAddProductToCart}>add to cart</button>
 
-                <div className={`product-page__text__description`} dangerouslySetInnerHTML={{ __html: description }}></div>
+                <Interweave className={`product-page__text__description`} content={description} />
 
             </div>
 
