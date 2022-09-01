@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    category: 'all',
+    category: sessionStorage.getItem('category') ?? 'all',
     chosenCurrencies: Number(localStorage.getItem('currencieIndex')),
 }
 

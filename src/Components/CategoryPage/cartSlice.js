@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    cartId: localStorage.getItem('cart'),
+    cartId: sessionStorage.getItem('cart') ?? '',
 }
 
 export const cartSlice = createSlice({
