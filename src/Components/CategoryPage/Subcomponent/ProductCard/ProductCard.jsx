@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Navigate } from 'react-router-dom';
+
 import { connect } from 'react-redux';
+import { addProductToList, incrementQuantity } from '../../../ProductPage/productSlice';
 
 import './ProductCard.scss'
 
@@ -13,19 +15,48 @@ class ProductCard extends Component {
         super(props)
 
         this.handleOpenPage = this.handleOpenPage.bind(this)
+        this.handleAddProductToCart = this.handleAddProductToCart.bind(this)
     }
 
     state = {
-        productFlag: false
+        productFlag: false,
     }
 
     componentDidMount() {
         this.setState({ productFlag: false })
     }
 
-    handleOpenPage() {
-        this.props.changingCardId(this.props.id);
-        this.setState({ productFlag: true })
+    handleOpenPage(e) {
+        if (e.target.name !== 'add to cart') {
+            this.props.changingCardId(this.props.id);
+            this.setState({ productFlag: true })
+        }
+    }
+
+    handleAddProductToCart() {
+        const { productList, addProductToList, incrementQuantity, attributes, prices, id } = this.props
+
+        let atrObj = {}
+
+        attributes.forEach(({ name, items }) => {
+
+            const stringObjSort = Object
+                ?.entries({ ...atrObj, [name]: items?.[0].id })
+                ?.sort((a, b) => a[0]?.toLocaleLowerCase()?.localeCompare(b[0]?.toLocaleLowerCase()))
+            atrObj = Object.fromEntries(stringObjSort)
+        })
+
+        const isAttribiuteEquale = productList?.find((el) => el.id === id && JSON.stringify(el.attributes) === JSON.stringify(atrObj));
+
+        if (Boolean(atrObj) && !Boolean(isAttribiuteEquale)) {
+
+            addProductToList({ id: id, attributes: atrObj, quantity: 1, prices: prices })
+
+        } else {
+            const productindex = productList?.findIndex(el => el.id === id && JSON.stringify(el.attributes) === JSON.stringify(atrObj))
+
+            incrementQuantity(productindex)
+        }
     }
 
     render() {
@@ -33,19 +64,17 @@ class ProductCard extends Component {
 
         const { productFlag } = this.state
 
-        const handleAddToCart = (e) => {
-            console.log('cart', e)
-        }
+        const { handleOpenPage, handleAddProductToCart } = this
 
         return (
             <>
                 {productFlag && <Navigate to={`/product-page/?id=${id}`} />}
-                <article className={`product-card `} onClick={this.handleOpenPage}>
+                <article className={`product-card `} onClick={(e) => { handleOpenPage(e) }}>
                     <div className={`product-card__div-img ${!inStock && ' product-card__out-of-stock-img'}`}>
                         <img src={gallery[0]} alt="img" className={`product-card__div-img__img `} />
                         {!inStock && <p className={`product-card__div-img__text`}>out of stock</p>}
 
-                        {inStock && <img src={addToCart} alt="add to cart" className={`product-card__add-to-cart`} onClick={handleAddToCart} />}
+                        {inStock && <img src={addToCart} name={`add to cart`} alt="add to cart" className={`product-card__add-to-cart`} onClick={handleAddProductToCart} />}
                     </div>
                     <p className={`product-card__title ${!inStock && ' product-card__out-of-stock-text'}`}>{brand} {name}</p>
                     <p className={`product-card__price ${!inStock && ' product-card__out-of-stock-text'}`}>{prices[currencyIndex].currency.symbol}{prices[currencyIndex].amount}</p>
@@ -53,8 +82,10 @@ class ProductCard extends Component {
             </>);
     }
 }
+
 const mapStateToPrps = (state) => ({
-    currencyIndex: state.category.chosenCurrencies
+    currencyIndex: state.category.chosenCurrencies,
+    productList: state.product.productList
 })
 
-export default connect(mapStateToPrps, { changingCardId })(ProductCard);
+export default connect(mapStateToPrps, { changingCardId, addProductToList, incrementQuantity })(ProductCard);
