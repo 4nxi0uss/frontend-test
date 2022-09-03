@@ -1,6 +1,13 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+    typePolicies: {
+        AttributeSet: {
+            keyFields: ["id", "items", ["id"]]
+        }
+    }
+});
+
 
 export const apolloClient = new ApolloClient({
     // Provide required constructor fields
@@ -13,7 +20,7 @@ export const apolloClient = new ApolloClient({
     queryDeduplication: false,
     defaultOptions: {
         watchQuery: {
-            fetchPolicy: 'cache-and-network',
+            fetchPolicy: 'cache-and-network'
         },
     },
 });
