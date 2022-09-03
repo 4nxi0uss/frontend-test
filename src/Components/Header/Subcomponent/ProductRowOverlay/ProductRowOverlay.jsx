@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import './ProductRowOverlay.scss'
 
-import { apolloClient } from '../../../../Apollo/client';
+import { apolloClient } from '../../../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
 
 import { connect } from 'react-redux';

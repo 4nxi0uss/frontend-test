@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { changingCategory } from '../../headerSlice';
 import { decrementQuantity, incrementQuantity, removeProduct } from '../../../ProductPage/productSlice';
 
-import { apolloClient } from '../../../../Apollo/client';
+import { apolloClient } from '../../../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
 
 import { getTotalCost, getTotalQuantity } from '../../../../Utilities/Utilities';

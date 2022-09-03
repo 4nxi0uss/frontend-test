@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { changingCategory } from '../Header/headerSlice';
 
 import { gql } from '@apollo/client';
-import { apolloClient } from '../../Apollo/client';
+import { apolloClient } from '../../Apollo/apolloClient';
 
 import { getTax, getTotalCost, getTotalQuantity } from '../../Utilities/Utilities';
 

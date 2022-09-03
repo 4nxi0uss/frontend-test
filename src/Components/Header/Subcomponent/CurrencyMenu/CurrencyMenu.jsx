@@ -3,7 +3,7 @@ import React, { Component, createRef } from 'react';
 import './CurrencyMenu.scss'
 
 import { gql } from '@apollo/client';
-import { apolloClient } from '../../../../Apollo/client';
+import { apolloClient } from '../../../../Apollo/apolloClient';
 
 import ArrowDown from '../../../../img/arrow-down.svg'
 import { connect } from 'react-redux';

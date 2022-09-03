@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import './Header.scss'
 
-import { apolloClient } from '../../Apollo/client';
+import { apolloClient } from '../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
 
 import { connect } from 'react-redux';

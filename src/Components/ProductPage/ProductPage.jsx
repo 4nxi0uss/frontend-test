@@ -5,7 +5,7 @@ import './ProductPage.scss'
 import { connect } from 'react-redux';
 
 import { gql } from '@apollo/client';
-import { apolloClient } from '../../Apollo/client';
+import { apolloClient } from '../../Apollo/apolloClient';
 
 import { addProductToList, incrementQuantity } from './productSlice';
 
@@ -109,7 +109,7 @@ class ProductPage extends Component {
 
         const isAttribiuteEquale = productList?.find(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes));
 
-        if (!!this.state.choosenAttributes && !isAttribiuteEquale) {
+        if (Boolean(this.state.choosenAttributes) && !Boolean(isAttribiuteEquale)) {
 
             addProductToList({ id: this.state.search, attributes: this.state.choosenAttributes, quantity: 1, prices: this.state.product.prices })
 

@@ -4,7 +4,7 @@ import './ProductRow.scss'
 
 import { showAttributes } from '../../../ProductPage/ProductPage';
 
-import { apolloClient } from '../../../../Apollo/client';
+import { apolloClient } from '../../../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
 
 import { connect } from 'react-redux';
