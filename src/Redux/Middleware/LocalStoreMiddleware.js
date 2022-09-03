@@ -1,5 +1,5 @@
 export const localSotrageMiddleware = (store) => (next) => ({ type, payload }) => {
-    console.log({ type, payload })
+
     const result = next({ type, payload });
 
     if (type.startsWith('product')) {
