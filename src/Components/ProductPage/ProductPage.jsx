@@ -60,13 +60,15 @@ class ProductPage extends Component {
         super(props)
 
         this.handleAddProductToCart = this.handleAddProductToCart.bind(this)
+        this.handleChooseAtribiute = this.handleChooseAtribiute.bind(this)
     }
 
     state = {
         product: {},
-        choosenthumbnail: 0,
+        choosenThumbnail: 0,
         choosenAttributes: {},
-        search: ''
+        search: '',
+        flagIsAttributesAreChosen: false
     }
 
     componentDidMount() {
@@ -98,7 +100,7 @@ class ProductPage extends Component {
     componentWillUnmount() {
         this.setState({
             product: {},
-            choosenthumbnail: 0,
+            choosenThumbnail: 0,
             choosenAttributes: {},
             search: ''
         })
@@ -107,8 +109,13 @@ class ProductPage extends Component {
     handleAddProductToCart() {
         const { productList, addProductToList, incrementQuantity } = this.props
 
-        const isAttribiuteEquale = productList?.find(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes));
+        if (!Boolean(Object.keys(this.state.choosenAttributes).length === this.state.product.attributes.length)) {
+            this.setState({ flagIsAttributesAreChosen: true });
+            return null
+        }
 
+        const isAttribiuteEquale = productList?.find(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes));
+        this.setState({ flagIsAttributesAreChosen: false });
         if (Boolean(this.state.choosenAttributes) && !Boolean(isAttribiuteEquale)) {
 
             addProductToList({ id: this.state.search, attributes: this.state.choosenAttributes, quantity: 1, prices: this.state.product.prices })
@@ -120,32 +127,33 @@ class ProductPage extends Component {
         }
     }
 
+    handleChooseAtribiute = (name, value) => {
+
+        const stringObjSort = Object
+            ?.entries({ ...this.state.choosenAttributes, [name]: value })
+            ?.sort((a, b) => a[0]?.toLocaleLowerCase()?.localeCompare(b[0]?.toLocaleLowerCase()))
+
+        this.setState({ choosenAttributes: Object.fromEntries(stringObjSort) })
+    }
+
     render() {
+        const { handleChooseAtribiute, handleAddProductToCart } = this
 
         const { gallery, brand, name, inStock, description, prices, attributes } = this.state.product
 
-        const { choosenthumbnail, choosenAttributes } = this.state
+        const { choosenThumbnail, choosenAttributes, flagIsAttributesAreChosen } = this.state
 
         const { currencyIndex } = this.props
 
-        const handleChooseAtribiute = (name, value) => {
+        const thumbnails = gallery?.map((el, index) => <img className={`product-page__thumbnails__thumbnails-img`} key={el} src={el} alt="" onClick={() => this.setState({ choosenThumbnail: index })} />)
 
-            const stringObjSort = Object
-                ?.entries({ ...choosenAttributes, [name]: value })
-                ?.sort((a, b) => a[0]?.toLocaleLowerCase()?.localeCompare(b[0]?.toLocaleLowerCase()))
-
-            this.setState({ choosenAttributes: Object.fromEntries(stringObjSort) })
-        }
-
-        const thumbnails = gallery?.map((el, index) => <img className={`product-page__thumbnails__thumbnails-img`} key={el} src={el} alt="" onClick={() => this.setState({ choosenthumbnail: index })} />)
-
-        return (<section className={`product-page`}>
-            <div className={`product-page__thumbnails`}>
+        return (<section className={`product-page`} >
+            <div className={`product-page__thumbnails`} style={{ overflowY: gallery?.length > 4 ? 'scroll' : 'none' }}>
                 {thumbnails}
             </div>
 
             <div className={`product-page__img-div`}>
-                <img className={`product-page__img-div__main-img`} src={gallery?.[choosenthumbnail]} alt="" />
+                <img className={`product-page__img-div__main-img`} src={gallery?.[choosenThumbnail]} alt="" />
             </div>
 
             <div className={`product-page__text`}>
@@ -157,7 +165,9 @@ class ProductPage extends Component {
                 <p className={`product-page__text__price`}>price:</p>
                 <p className={`product-page__text__amount`}>{prices?.[currencyIndex]?.currency.symbol}{prices?.[currencyIndex]?.amount}</p>
 
-                <button disabled={!inStock} className={`product-page__text__btn`} onClick={this.handleAddProductToCart}>add to cart</button>
+                {flagIsAttributesAreChosen && <p className={`product-page__text__warning`}>You should choose all attributes like size, color etc...</p>}
+
+                <button disabled={!inStock} className={`product-page__text__btn`} style={{ backgroundColor: !inStock && '#A3D7B1' }} onClick={handleAddProductToCart}>{inStock ? `add to cart` : `out of stock`}</button>
 
                 <Interweave className={`product-page__text__description`} content={description} />
 

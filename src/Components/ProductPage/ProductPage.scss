@@ -3,13 +3,14 @@
     display: flex;
     flex-direction: row;
     height: 100%;
-    padding-top: 5rem;
+    padding: 5rem 0;
 
     &__thumbnails {
         position: relative;
         display: flex;
         flex-direction: column;
         gap: 2.5rem;
+        max-height: 32rem;
         margin-right: 1rem;
         padding-bottom: 5rem;
 
@@ -18,6 +19,24 @@
             max-width: 5rem;
             max-height: 5rem;
             cursor: pointer;
+        }
+
+        &::-webkit-scrollbar {
+            width: .3rem;
+            background-color: rgb(241, 241, 241);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-color: #5ECE7B;
+            cursor: pointer;
+        }
+
+        @supports(scrollbar-color: #5ECE7B rgb(241, 241, 241)) {
+            * {
+                scrollbar-color: #5ECE7B rgb(241, 241, 241);
+                scrollbar-width: thin;
+                cursor: pointer;
+            }
         }
     }
 
@@ -40,6 +59,7 @@
         position: relative;
         width: 18.25rem;
         margin-left: 5rem;
+        transition: .3s;
 
         &__brand {
             position: relative;
@@ -109,6 +129,23 @@
             line-height: 159.96%;
             color: #1D1F22;
         }
+
+        &__warning {
+            position: relative;
+            color: red;
+            margin-bottom: .5rem;
+            animation: warn-anim .5s ease-in;
+        }
+
+        @keyframes warn-anim {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
     }
 }
 
@@ -146,17 +183,29 @@
             max-width: 100%;
             list-style: none;
 
-            &--active::after,
-            &:active::after {
+            &:hover::after {
                 position: absolute;
                 display: inline-block;
-                height: 2.13rem;
-                width: 2.13rem;
+                height: 2.15rem;
+                width: 2.15rem;
                 left: 50%;
                 top: 50%;
                 transform: translate(-50%, -50%);
                 content: " ";
-                border: 1px solid #5ECE7B;
+                border: 2px solid #747DCF;
+            }
+
+            &--active::after,
+            &:active::after {
+                position: absolute;
+                display: inline-block;
+                height: 2.15rem;
+                width: 2.15rem;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                content: " ";
+                border: 2px solid #5ECE7B;
                 z-index: -1;
             }
         }
@@ -173,7 +222,7 @@
             list-style: none;
 
             &:hover {
-                background-color: #eee;
+                background-color: rgb(238, 238, 238);
                 color: #1D1F22;
             }
 
