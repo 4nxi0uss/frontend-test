@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import { localSotrageMiddleware } from '../Middleware/LocalStoreMiddleware'
+import { sessionStoreMiddleware } from '../Middleware/SessionStoreMiddleware'
 
 import headerSlice from '../../Components/Header/headerSlice'
 import cartSlice from '../../Components/CategoryPage/cartSlice'
@@ -12,5 +13,5 @@ export const store = configureStore({
         cart: cartSlice,
         product: productSlice
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localSotrageMiddleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localSotrageMiddleware).concat(sessionStoreMiddleware)
 })
