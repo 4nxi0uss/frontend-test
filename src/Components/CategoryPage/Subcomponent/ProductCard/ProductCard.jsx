@@ -6,7 +6,7 @@ import { addProductToList, incrementQuantity } from '../../../ProductPage/produc
 
 import './ProductCard.scss'
 
-import addToCart from '../../../../img/add-to-cart.svg'
+import { ReactComponent as AddToCart } from '../../../../img/add-to-cart.svg'
 
 import { changingCardId } from '../../cartSlice';
 
@@ -27,7 +27,7 @@ class ProductCard extends Component {
     }
 
     handleOpenPage(e) {
-        if (e.target.name !== 'add to cart') {
+        if (e.target.ownerSVGElement?.tagName !== 'svg') {
             this.props.changingCardId(this.props.id);
             this.setState({ productFlag: true })
         }
@@ -74,7 +74,7 @@ class ProductCard extends Component {
                         <img src={gallery[0]} alt="img" className={`product-card__div-img__img `} />
                         {!inStock && <p className={`product-card__div-img__text`}>out of stock</p>}
 
-                        {inStock && <img src={addToCart} name={`add to cart`} alt="add to cart" className={`product-card__add-to-cart`} onClick={handleAddProductToCart} />}
+                        {inStock && <AddToCart name={`add to cart`} alt="add to cart" className={`product-card__add-to-cart`} onClick={handleAddProductToCart} />}
                     </div>
                     <p className={`product-card__title ${!inStock && ' product-card__out-of-stock-text'}`}>{brand} {name}</p>
                     <p className={`product-card__price ${!inStock && ' product-card__out-of-stock-text'}`}>{prices[currencyIndex].currency.symbol}{prices[currencyIndex].amount}</p>
