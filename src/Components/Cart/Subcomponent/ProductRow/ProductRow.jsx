@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 
 import './ProductRow.scss'
 
-import { showAttributes } from '../../../ProductPage/ProductPage';
-
 import { apolloClient } from '../../../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
 
@@ -64,12 +62,25 @@ class ProductRow extends Component {
     }
 
     render() {
-
         const { currencyIndex, quantity, choosenAttributes, index } = this.props
 
         const { gallery, brand, name, prices, attributes } = this.state.productData
 
         const { thumbnailsId } = this.state
+
+        const showAttributes = attributes?.map(({ name, id, items, type }) => (
+            <div key={id} className='attributes-row'>
+
+                <p className='attributes-row__name'>{name}:</p>
+
+                <ul className='attributes-row__div'>
+                    {items?.map(({ displayValue, id, value }) => (
+                        <li key={id} className={`attributes-row__div__${type} ${choosenAttributes?.[name] === id && "attributes-row__div__" + type + "--active"}`} style={{
+                            'backgroundColor': `${value}`
+                        }}>{type !== "swatch" && displayValue}</li>))}
+                </ul>
+            </div>)
+        )
 
         return (
             <article className={`product`}>
@@ -77,7 +88,7 @@ class ProductRow extends Component {
                     <h3 className={`product__details__brand`}>{brand}</h3>
                     <h4 className={`product__details__name`}>{name}</h4>
                     <p className={`product__details__price`}>{prices?.[currencyIndex]?.currency.symbol}{prices?.[currencyIndex]?.amount}</p>
-                    {showAttributes(attributes, choosenAttributes)}
+                    {showAttributes}
                 </div>
                 <div className={`product__div`}>
                     <div className={`product__div__increase-amount`}>
