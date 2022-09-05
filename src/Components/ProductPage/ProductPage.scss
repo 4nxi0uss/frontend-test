@@ -1,3 +1,5 @@
+@use '../../_lib' as lib;
+
 .product-page {
     position: relative;
     display: flex;
@@ -117,6 +119,9 @@
             border: 1px solid transparent;
             cursor: pointer;
             margin-bottom: 2.5rem;
+            transition: .3s;
+
+            @include lib.productGreenBtn;
         }
 
         &__description {
