@@ -63,7 +63,7 @@ class CurrencyMenu extends Component {
             <>
                 <div ref={this.currencySymbolRef} className={'currency-menu'} onClick={handleToogleMenu}>
                     <p className={`currency-menu__currency-symbol`}>{currencies[currencyIndex]?.symbol}</p>
-                    <img src={ArrowDown} alt="" className={`currency-menu__currency-arrow`} />
+                    <img src={ArrowDown} alt="" className={`currency-menu__currency-arrow-${currencyFlag ? 'up' : 'down'}`} />
                 </div>
                 {currencyFlag && <div ref={this.dropDownMenuRef} className={`currency-list`} >
                     {currencyList}

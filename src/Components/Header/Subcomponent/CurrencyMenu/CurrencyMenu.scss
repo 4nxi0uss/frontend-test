@@ -15,9 +15,16 @@
         text-align: right;
     }
 
-    &__currency-arrow {
+    &__currency-arrow-down {
         rotate: 0deg;
         width: .5rem;
+        transition: .3s;
+    }
+
+    &__currency-arrow-up {
+        rotate: 180deg;
+        width: .5rem;
+        transition: .3s;
     }
 }
 
