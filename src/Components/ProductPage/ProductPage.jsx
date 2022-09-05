@@ -41,20 +41,6 @@ const CATEGORY_QUERY = `query getProducts($id: String!) {
   }
   `
 
-export const showAttributes = (attributes, choosenAttributes, handleChooseAtribiute) => (attributes?.map(({ name, id, items, type }) => (
-    <div key={id} className='attributes'>
-
-        <p className='attributes__name'>{name}:</p>
-
-        <ul className='attributes__div'>
-            {items?.map(({ displayValue, id, value }) => (
-                <li onClick={() => { handleChooseAtribiute(name, id) }} key={id} className={`attributes__div__${type} ${choosenAttributes?.[name] === id && "attributes__div__" + type + "--active"}`} style={{
-                    'backgroundColor': `${value}`
-                }}>{type !== "swatch" && displayValue}</li>))}
-        </ul>
-    </div>)
-))
-
 class ProductPage extends Component {
     constructor(props) {
         super(props)
@@ -145,6 +131,20 @@ class ProductPage extends Component {
 
         const { currencyIndex } = this.props
 
+        const showAttributes = attributes?.map(({ name, id, items, type }) => (
+            <div key={id} className='attributes'>
+
+                <p className='attributes__name'>{name}:</p>
+
+                <ul className='attributes__div'>
+                    {items?.map(({ displayValue, id, value }) => (
+                        <li onClick={() => { handleChooseAtribiute(name, id) }} key={id} className={`attributes__div__${type} ${choosenAttributes?.[name] === id && "attributes__div__" + type + "--active"}`} style={{
+                            'backgroundColor': `${value}`
+                        }}>{type !== "swatch" && displayValue}</li>))}
+                </ul>
+            </div>)
+        )
+
         const thumbnails = gallery?.map((el, index) => <img className={`product-page__thumbnails__thumbnails-img`} key={el} src={el} alt="" onClick={() => this.setState({ choosenThumbnail: index })} />)
 
         return (<section className={`product-page`} >
@@ -160,7 +160,7 @@ class ProductPage extends Component {
                 <h2 className={`product-page__text__brand`}>{brand}</h2>
                 <h3 className={`product-page__text__name`}>{name}</h3>
 
-                {showAttributes(attributes, choosenAttributes, handleChooseAtribiute)}
+                {showAttributes}
 
                 <p className={`product-page__text__price`}>price:</p>
                 <p className={`product-page__text__amount`}>{prices?.[currencyIndex]?.currency.symbol}{prices?.[currencyIndex]?.amount}</p>
