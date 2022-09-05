@@ -1,3 +1,5 @@
+@use '../../../../_lib' as lib;
+
 .product-overlay {
     position: relative;
     display: flex;
@@ -57,6 +59,8 @@
                 color: #1D1F22;
                 border: 1px solid #1D1F22;
                 cursor: pointer;
+
+                @include lib.increaseQuantityBtn;
             }
 
             &__product-amount {
@@ -95,6 +99,9 @@
                     background: rgba(0, 0, 0, 0.73);
                     border: 1px solid transparent;
                     cursor: pointer;
+                    transition: .3s;
+
+                    @include lib.changeThumbnailsBtn;
                 }
             }
         }

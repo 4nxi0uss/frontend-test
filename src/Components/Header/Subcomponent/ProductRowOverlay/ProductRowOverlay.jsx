@@ -86,9 +86,7 @@ class ProductRowOverlay extends Component {
         return (
             <article className={`product-overlay`}>
                 <div className={`product-overlay__details`}>
-                    {/* <h3 className={`product-overlay__details__brand`}>{brand}</h3> */}
                     <h3 className={`product-overlay__details__brand`}>{brand}{<br />}{name}</h3>
-                    {/* <h3 className={`product-overlay__details__name`}>{name}</h3> */}
                     <p className={`product-overlay__details__price`}>{prices?.[currencyIndex]?.currency.symbol}{prices?.[currencyIndex]?.amount}</p>
                     {showAttributes(attributes, choosenAttributes)}
                 </div>
