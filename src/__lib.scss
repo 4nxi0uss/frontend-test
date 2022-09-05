@@ -1,0 +1,33 @@
+//Mixins
+
+@mixin productGreenBtn {
+    &:hover {
+        background-color: #65DB84;
+    }
+
+    &:active {
+        background-color: #92e9a9;
+    }
+}
+
+@mixin increaseQuantityBtn {
+    &:hover {
+        background-color: #1D1F22;
+        color: white;
+    }
+
+    &:active {
+        background-color: #5b5d5f;
+        color: white;
+    }
+}
+
+@mixin changeThumbnailsBtn {
+    &:hover {
+        background: rgba(54, 54, 54, 0.73);
+    }
+
+    &:active {
+        background: rgba(0, 0, 0, 0.73);
+    }
+}
