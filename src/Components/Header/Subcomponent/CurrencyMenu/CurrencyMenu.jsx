@@ -15,7 +15,7 @@ class CurrencyMenu extends Component {
 
         this.dropDownMenuRef = createRef()
         this.currencySymbolRef = createRef()
-        this.handleOut = this.handleOut?.bind(this)
+        this.handleOutsideClick = this.handleOutsideClick?.bind(this)
     }
 
     state = {
@@ -29,14 +29,15 @@ class CurrencyMenu extends Component {
             .then((res) => (this.setState({ currencies: res.data.currencies })))
             .catch(err => console.warn(err))
 
-        document.addEventListener('mousedown', this.handleOut)
+        document.addEventListener('mousedown', this.handleOutsideClick)
     }
 
     componentWillUnmount() {
-        document.removeEventListener('mousedown', this.handleOut)
+        document.removeEventListener('mousedown', this.handleOutsideClick)
     }
 
-    handleOut = (e) => {
+    // closing currency menu after clicking outside menu
+    handleOutsideClick = (e) => {
         if (this.state.currencyFlag && !!this.dropDownMenuRef && !!this.currencySymbolRef && !this.dropDownMenuRef.current?.contains(e.target) && !this.currencySymbolRef.current?.contains(e.target)) { this.setState({ currencyFlag: false }) }
     }
 
