@@ -31,7 +31,7 @@ class ProductRow extends Component {
     constructor(props) {
         super(props)
 
-        this.handleChangethumbnail = this.handleChangethumbnail.bind(this)
+        this.handleChangeIdOfthumbnail = this.handleChangeIdOfthumbnail.bind(this)
     }
 
     state = {
@@ -48,7 +48,7 @@ class ProductRow extends Component {
             .catch(err => console.warn(err))
     }
 
-    handleChangethumbnail(increment) {
+    handleChangeIdOfthumbnail(increment) {
         const quantityOfThumbnails = this.state?.productData?.gallery?.length
 
         if (increment && quantityOfThumbnails > this.state.thumbnailsId + 1) {
@@ -99,8 +99,8 @@ class ProductRow extends Component {
                     <div className={`product__div__div-img`}>
                         <img src={gallery?.[thumbnailsId]} alt="" className={`product__div__div-img__img`} />
                         <div className={`product__div__div-img__img-switch`} style={({ display: `${gallery?.length === 1 ? 'none' : 'flex'}` })} >
-                            <button className={`product__div__div-img__img-switch__btn`} onClick={() => { this.handleChangethumbnail(false) }}>{`<`}</button>
-                            <button className={`product__div__div-img__img-switch__btn`} onClick={() => { this.handleChangethumbnail(true) }}>{`>`}</button>
+                            <button className={`product__div__div-img__img-switch__btn`} onClick={() => { this.handleChangeIdOfthumbnail(false) }}>{`<`}</button>
+                            <button className={`product__div__div-img__img-switch__btn`} onClick={() => { this.handleChangeIdOfthumbnail(true) }}>{`>`}</button>
                         </div>
                     </div>
                 </div>
