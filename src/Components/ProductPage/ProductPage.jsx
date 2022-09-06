@@ -8,6 +8,7 @@ import { gql } from '@apollo/client';
 import { apolloClient } from '../../Apollo/apolloClient';
 
 import { addProductToList, incrementQuantity } from './productSlice';
+import { changingCardId } from '../CategoryPage/cartSlice';
 
 import { Interweave } from 'interweave'
 
@@ -60,13 +61,15 @@ class ProductPage extends Component {
     componentDidMount() {
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId }
+                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.state.search === '' ? this.props.cartId : this.state.search }
             })
             .then((res) => (this.setState({ product: res.data.product })))
             .catch(err => console.warn(err))
 
+        //added seaech params to state
         let par = ((new URL(document.location)).searchParams)
         this.setState({ search: par.get('id') })
+        this.props.changingCardId(par.get('id'))
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -74,13 +77,15 @@ class ProductPage extends Component {
 
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.props.cartId }
+                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.state.search === '' ? this.props.cartId : this.state.search }
             })
             .then((res) => (this.setState({ product: res.data.product })))
             .catch(err => console.warn(err))
 
+        //added seaech params to state
         let par = ((new URL(document.location)).searchParams)
         this.setState({ search: par.get('id') })
+        this.props.changingCardId(par.get('id'))
     }
 
     componentWillUnmount() {
@@ -183,4 +188,4 @@ const mapStateToPrps = (state) => ({
     productList: state.product.productList
 })
 
-export default connect(mapStateToPrps, { addProductToList, incrementQuantity })(ProductPage);
+export default connect(mapStateToPrps, { addProductToList, incrementQuantity, changingCardId })(ProductPage);
