@@ -31,6 +31,13 @@ class CartOverlay extends Component {
             .catch(err => console.warn(err))
     }
 
+    componentDidUpdate(prevProps) {
+        //closing cart overlay after changing category
+        if (prevProps.category !== this.props.category) {
+            this.setState({ cartFlag: false })
+        }
+    }
+
     render() {
         const { cartFlag, currencies } = this.state
         const { currencyIndex, productList } = this.props
@@ -60,7 +67,8 @@ class CartOverlay extends Component {
 
 const mapStateToPrps = (state) => ({
     currencyIndex: state.category.chosenCurrencies,
-    productList: state.product.productList
+    category: state.category.category,
+    productList: state.product.productList,
 })
 
 export default connect(mapStateToPrps, { changingCategory, incrementQuantity, decrementQuantity, removeProduct })(CartOverlay);
