@@ -9,6 +9,7 @@ import { changingCategory } from '../Header/headerSlice';
 
 import { gql } from '@apollo/client';
 import { apolloClient } from '../../Apollo/apolloClient';
+import { CURRENCIES_QUERY } from '../../Apollo/querries';
 
 import { getTax, getTotalCost, getTotalQuantity } from '../../Utilities/Utilities';
 
@@ -23,7 +24,7 @@ class Cart extends Component {
 
         apolloClient
             .query({
-                query: gql`{ currencies{label symbol}}`
+                query: gql`${CURRENCIES_QUERY}`
             })
             .then((res) => (
                 this.setState({ currencies: res.data.currencies })
