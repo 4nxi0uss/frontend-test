@@ -4,28 +4,13 @@ import './ProductRow.scss'
 
 import { apolloClient } from '../../../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
+import { PRODUCT_SHORT_QUERY } from '../../../../Apollo/querries';
 
 import { connect } from 'react-redux';
 import { changingCategory } from '../../../Header/headerSlice';
 import { decrementQuantity, incrementQuantity, removeProduct } from '../../../ProductPage/productSlice';
 
-import { handleChangeQuantity } from '../../../../Utilities/Utilities';
-
-const CATEGORY_QUERY = `query getProducts($id: String!) {
-    product(id: $id) {
-      id name gallery attributes {
-        id name type items {
-          displayValue value id
-        }
-      }
-      prices {
-        currency {
-          symbol
-        }
-        amount
-      }
-      brand
-    } } `
+import { handleChangeQuantity, priceFormat } from '../../../../Utilities/Utilities';
 
 class ProductRow extends Component {
     constructor(props) {
@@ -42,7 +27,7 @@ class ProductRow extends Component {
     componentDidMount() {
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { id: this.props.id }
+                query: gql`${PRODUCT_SHORT_QUERY}`, variables: { id: this.props.id }
             })
             .then((res) => (this.setState({ productData: res.data.product })))
             .catch(err => console.warn(err))
@@ -54,10 +39,15 @@ class ProductRow extends Component {
         if (increment && quantityOfThumbnails > this.state.thumbnailsId + 1) {
 
             this.setState({ thumbnailsId: this.state.thumbnailsId + 1 })
+        } else if (increment && quantityOfThumbnails === this.state.thumbnailsId + 1) {
+            this.setState({ thumbnailsId: 0 })
         }
 
         if (increment === false && this.state.thumbnailsId > 0) {
             this.setState({ thumbnailsId: this.state.thumbnailsId - 1 })
+        }
+        else if (increment === false && this.state.thumbnailsId === 0) {
+            this.setState({ thumbnailsId: quantityOfThumbnails - 1 })
         }
     }
 
@@ -87,7 +77,7 @@ class ProductRow extends Component {
                 <div className={`product__details`}>
                     <h3 className={`product__details__brand`}>{brand}</h3>
                     <h4 className={`product__details__name`}>{name}</h4>
-                    <p className={`product__details__price`}>{prices?.[currencyIndex]?.currency.symbol}{prices?.[currencyIndex]?.amount}</p>
+                    <p className={`product__details__price`}>{prices?.[currencyIndex]?.currency.symbol}{priceFormat(prices?.[currencyIndex]?.amount)}</p>
                     {showAttributes}
                 </div>
                 <div className={`product__div`}>
