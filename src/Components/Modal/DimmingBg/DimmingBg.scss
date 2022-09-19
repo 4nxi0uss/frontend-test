@@ -1,0 +1,12 @@
+@use '../../../_lib' as lib;
+
+.dimming {
+    position: absolute;
+    min-width: lib.$min-width;
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    top: 5rem;
+    z-index: 1;
+    background-color: rgba(78, 78, 78, 0.274);
+}
