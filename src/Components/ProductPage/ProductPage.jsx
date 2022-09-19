@@ -9,7 +9,7 @@ import { apolloClient } from '../../Apollo/apolloClient';
 import { PRODUCT_QUERY } from '../../Apollo/querries';
 
 import { addProductToList, incrementQuantity } from './productSlice';
-import { changingCardId } from '../CategoryPage/cartSlice';
+import { changingCardId } from '../CategoryPage/categorySlice';
 
 import { Interweave } from 'interweave'
 

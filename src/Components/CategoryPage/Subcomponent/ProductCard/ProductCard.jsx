@@ -8,7 +8,7 @@ import './ProductCard.scss'
 
 import { ReactComponent as AddToCart } from '../../../../img/add-to-cart.svg'
 
-import { changingCardId } from '../../cartSlice';
+import { changingCardId } from '../../categorySlice';
 
 import { priceFormat } from '../../../../Utilities/Utilities';
 
