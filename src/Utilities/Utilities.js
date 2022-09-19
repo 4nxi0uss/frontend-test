@@ -3,6 +3,10 @@ export const getTax = (money) => (
     ((money / 100) * 21).toFixed(2)
 )
 
+export const priceFormat = (money) => (
+    money?.toFixed(2)
+)
+
 export const getTotalQuantity = (productList) => {
     let productQuantity = 0;
     productList?.forEach(({ quantity }) => { productQuantity += quantity })
