@@ -10,6 +10,8 @@ import { ReactComponent as AddToCart } from '../../../../img/add-to-cart.svg'
 
 import { changingCardId } from '../../cartSlice';
 
+import { priceFormat } from '../../../../Utilities/Utilities';
+
 class ProductCard extends Component {
     constructor(props) {
         super(props)
@@ -49,7 +51,6 @@ class ProductCard extends Component {
         const isAttribiuteEquale = productList?.find((el) => el.id === id && JSON.stringify(el.attributes) === JSON.stringify(atrObj));
 
         if (Boolean(atrObj) && !Boolean(isAttribiuteEquale)) {
-
             addProductToList({ id: id, attributes: atrObj, quantity: 1, prices: prices })
 
         } else {
@@ -72,12 +73,12 @@ class ProductCard extends Component {
                 <article className={`product-card `} onClick={(e) => { handleOpenPage(e) }}>
                     <div className={`product-card__div-img ${!inStock && ' product-card__out-of-stock-img'}`}>
                         <img src={gallery[0]} alt="img" className={`product-card__div-img__img `} />
-                        {!inStock && <p className={`product-card__div-img__text`}>out of stock</p>}
+                        {!inStock && <p className={`product-card__div-img__out-of-stock-text`}>out of stock</p>}
 
                         {inStock && <AddToCart name={`add to cart`} alt="add to cart" className={`product-card__add-to-cart`} onClick={handleAddProductToCart} />}
                     </div>
                     <p className={`product-card__title ${!inStock && ' product-card__out-of-stock-text'}`}>{brand} {name}</p>
-                    <p className={`product-card__price ${!inStock && ' product-card__out-of-stock-text'}`}>{prices[currencyIndex].currency.symbol}{prices[currencyIndex].amount}</p>
+                    <p className={`product-card__price ${!inStock && ' product-card__out-of-stock-text'}`}>{prices[currencyIndex].currency.symbol}{priceFormat(prices[currencyIndex].amount)}</p>
                 </article>
             </>);
     }
