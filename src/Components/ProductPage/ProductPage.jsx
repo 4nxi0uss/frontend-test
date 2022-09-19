@@ -6,41 +6,15 @@ import { connect } from 'react-redux';
 
 import { gql } from '@apollo/client';
 import { apolloClient } from '../../Apollo/apolloClient';
+import { PRODUCT_QUERY } from '../../Apollo/querries';
 
 import { addProductToList, incrementQuantity } from './productSlice';
 import { changingCardId } from '../CategoryPage/cartSlice';
 
 import { Interweave } from 'interweave'
 
-const CATEGORY_QUERY = `query getProducts($id: String!) {
-    product(id: $id) {
-      id
-      name
-      inStock
-      gallery
-      description
-      category
-      attributes {
-        id
-        name
-        type
-        items {
-          displayValue
-          value
-          id
-        }
-      }
-      prices {
-        currency {
-          label
-          symbol
-        }
-        amount
-      }
-      brand
-    }
-  }
-  `
+import { priceFormat } from '../../Utilities/Utilities';
+
 
 class ProductPage extends Component {
     constructor(props) {
@@ -54,38 +28,31 @@ class ProductPage extends Component {
         product: {},
         choosenThumbnail: 0,
         choosenAttributes: {},
-        search: '',
         flagIsAttributesAreChosen: false
     }
 
     componentDidMount() {
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.state.search === '' ? this.props.cartId : this.state.search }
+                query: gql`${PRODUCT_QUERY}`, variables: { "id": this.props.cartId }
             })
             .then((res) => (this.setState({ product: res.data.product })))
             .catch(err => console.warn(err))
 
-        //added seaech params to state
+        // added seaech params to state
         let par = ((new URL(document.location)).searchParams)
-        this.setState({ search: par.get('id') })
         this.props.changingCardId(par.get('id'))
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.search === this.state.search) return null
+    componentDidUpdate(prevProps) {
+        if (prevProps.cartId === this.props.cartId) return null
 
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "id": this.state.search === '' ? this.props.cartId : this.state.search }
+                query: gql`${PRODUCT_QUERY}`, variables: { "id": this.props.cartId }
             })
             .then((res) => (this.setState({ product: res.data.product })))
             .catch(err => console.warn(err))
-
-        //added seaech params to state
-        let par = ((new URL(document.location)).searchParams)
-        this.setState({ search: par.get('id') })
-        this.props.changingCardId(par.get('id'))
     }
 
     componentWillUnmount() {
@@ -93,26 +60,26 @@ class ProductPage extends Component {
             product: {},
             choosenThumbnail: 0,
             choosenAttributes: {},
-            search: ''
         })
     }
 
     handleAddProductToCart() {
-        const { productList, addProductToList, incrementQuantity } = this.props
+        const { productList, addProductToList, incrementQuantity, cartId } = this.props
 
         if (!Boolean(Object.keys(this.state.choosenAttributes).length === this.state.product.attributes.length)) {
             this.setState({ flagIsAttributesAreChosen: true });
             return null
         }
 
-        const isAttribiuteEquale = productList?.find(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes));
+        const isAttribiuteEquale = productList?.find(el => el.id === cartId && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes));
+
         this.setState({ flagIsAttributesAreChosen: false });
         if (Boolean(this.state.choosenAttributes) && !Boolean(isAttribiuteEquale)) {
 
-            addProductToList({ id: this.state.search, attributes: this.state.choosenAttributes, quantity: 1, prices: this.state.product.prices })
+            addProductToList({ id: cartId, attributes: this.state.choosenAttributes, quantity: 1, prices: this.state.product.prices })
 
         } else {
-            const productindex = productList?.findIndex(el => el.id === this.state.search && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes))
+            const productindex = productList?.findIndex(el => el.id === cartId && JSON.stringify(el.attributes) === JSON.stringify(this.state.choosenAttributes))
 
             incrementQuantity(productindex)
         }
@@ -157,8 +124,10 @@ class ProductPage extends Component {
                 {thumbnails}
             </div>
 
-            <div className={`product-page__img-div`}>
+            <div className={`product-page__img-div ${!inStock && `product-page__img-div__out-of-stock-img`}`}>
                 <img className={`product-page__img-div__main-img`} src={gallery?.[choosenThumbnail]} alt="" />
+
+                {!inStock && <p className={`product-page__img-div__out-of-stock-text`}>out of stock</p>}
             </div>
 
             <div className={`product-page__text`}>
@@ -168,7 +137,7 @@ class ProductPage extends Component {
                 {showAttributes}
 
                 <p className={`product-page__text__price`}>price:</p>
-                <p className={`product-page__text__amount`}>{prices?.[currencyIndex]?.currency.symbol}{prices?.[currencyIndex]?.amount}</p>
+                <p className={`product-page__text__amount`}>{prices?.[currencyIndex]?.currency.symbol}{priceFormat(prices?.[currencyIndex]?.amount)}</p>
 
                 {flagIsAttributesAreChosen && <p className={`product-page__text__warning`}>You should choose all attributes like size, color etc...</p>}
 
