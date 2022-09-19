@@ -60,7 +60,7 @@ export const CURRENCIES_QUERY = `{
   }
   `
 
-export const CATEGORY_PRODUCT_QUERY = `query getCategoryProducts($cat: String!) {
+export const CATEGORY_PRODUCT_QUERY = `query getCategoryProducts($category: String!) {
   category(input: { title: $category }) {
     products {
       id
