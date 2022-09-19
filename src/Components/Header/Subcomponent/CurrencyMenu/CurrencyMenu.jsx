@@ -4,6 +4,7 @@ import './CurrencyMenu.scss'
 
 import { gql } from '@apollo/client';
 import { apolloClient } from '../../../../Apollo/apolloClient';
+import { CURRENCIES_QUERY } from '../../../../Apollo/querries';
 
 import ArrowDown from '../../../../img/arrow-down.svg'
 import { connect } from 'react-redux';
@@ -15,7 +16,7 @@ class CurrencyMenu extends Component {
 
         this.dropDownMenuRef = createRef()
         this.currencySymbolRef = createRef()
-        this.handleOutsideClick = this.handleOutsideClick?.bind(this)
+        this.handleOutsideClick = this.handleOutsideClick.bind(this)
     }
 
     state = {
@@ -25,7 +26,7 @@ class CurrencyMenu extends Component {
 
     componentDidMount() {
         apolloClient
-            .query({ query: gql`{currencies{label symbol}}` })
+            .query({ query: gql`${CURRENCIES_QUERY}` })
             .then((res) => (this.setState({ currencies: res.data.currencies })))
             .catch(err => console.warn(err))
 
