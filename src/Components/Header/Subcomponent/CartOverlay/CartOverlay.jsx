@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 
 import './CartOverlay.scss'
 import { Link } from 'react-router-dom';
@@ -13,10 +13,18 @@ import { decrementQuantity, incrementQuantity, removeProduct } from '../../../Pr
 
 import { apolloClient } from '../../../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
+import { CURRENCIES_QUERY } from '../../../../Apollo/querries';
 
 import { getTotalCost, getTotalQuantity } from '../../../../Utilities/Utilities';
 
 class CartOverlay extends Component {
+    constructor(props) {
+        super(props)
+        this.modalRef = createRef()
+        this.carticonRef = createRef()
+        this.handleOutsideClick = this.handleOutsideClick.bind(this)
+    }
+
     state = {
         cartFlag: false,
         currencies: {}
@@ -25,10 +33,11 @@ class CartOverlay extends Component {
     componentDidMount() {
         apolloClient
             .query({
-                query: gql`{ currencies{label symbol}}`, variables: { id: this.props.id }
+                query: gql`${CURRENCIES_QUERY}`, variables: { id: this.props.id }
             })
             .then((res) => (this.setState({ currencies: res.data.currencies })))
             .catch(err => console.warn(err))
+        document.addEventListener('mousedown', this.handleOutsideClick)
     }
 
     componentDidUpdate(prevProps) {
@@ -36,6 +45,14 @@ class CartOverlay extends Component {
         if (prevProps.category !== this.props.category) {
             this.setState({ cartFlag: false })
         }
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleOutsideClick)
+    }
+
+    handleOutsideClick = (e) => {
+        if (this.state.cartFlag && !!this.carticonRef && !this.carticonRef.current?.contains(e.target) && !e.path.includes(this.modalRef.current)) { this.setState({ cartFlag: false }) }
     }
 
     render() {
@@ -46,12 +63,12 @@ class CartOverlay extends Component {
 
         return (
             <>
-                <div className={`cart-icon`} onClick={() => { this.setState({ cartFlag: !cartFlag }) }}>
+                <div className={`cart-icon`} ref={this.carticonRef} onClick={() => { this.setState({ cartFlag: !cartFlag }) }}>
                     <img src={cartImg} alt="" className={`cart-icon__img`} />
                     {Boolean(getTotalQuantity(productList)) && <span className={`cart-icon__quantity-item`}>{getTotalQuantity(productList)}</span>}
                 </div>
 
-                <Modal isOpen={cartFlag} >
+                <Modal isOpen={cartFlag} createRef={() => this.modalRef} >
                     <p className={`bag-name`}>My bag, <span className={`bag-name__items`}>{getTotalQuantity(productList)} {getTotalQuantity(productList) === 1 ? `item` : `items`}</span></p>
                     {prod}
                     <div className={`cost`}><p className={`cost__total`}>Total</p> <p className={`cost__amount`}>{currencies?.[currencyIndex]?.symbol}{getTotalCost(productList, currencyIndex)}</p></div>

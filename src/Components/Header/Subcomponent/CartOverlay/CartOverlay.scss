@@ -3,6 +3,7 @@
 .cart-icon {
     position: relative;
     cursor: pointer;
+    z-index: 1;
 
     &__img {
         position: relative;
