@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import DimmingBg from './DimmingBg/DimmingBg';
+
 import './Modal.scss'
 
 class Modal extends Component {
 
     render() {
-        const { children, isOpen } = this.props
+        const { children, isOpen, createRef } = this.props
 
         if (!isOpen) return null
-
         return ReactDOM?.createPortal((
             <>
-                <div className='dimming' />
-                <dialog className={`cart-overlay`} open={isOpen} >
+                <DimmingBg />
+
+                <dialog className={`cart-overlay`} ref={createRef()} open={isOpen} >
                     {children}
                 </dialog>
             </>
-        ), document.querySelector('main'));
+        ), document.querySelector('#root'));
     }
 }
 

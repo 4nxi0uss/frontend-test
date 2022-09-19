@@ -1,13 +1,14 @@
 .cart-overlay {
     position: absolute;
+    display: inline-block;
     max-height: 42.5rem;
     width: 20.5rem;
     background-color: white;
     border: 1px solid transparent;
-    top: 0;
-    left: 54rem;
-    bottom: 0;
+    top: 5rem;
+    left: 68vw;
     overflow-y: scroll;
+    z-index: 1;
 }
 
 .cart-overlay::-webkit-scrollbar {
@@ -26,16 +27,4 @@
         scrollbar-width: thin;
         cursor: pointer;
     }
-}
-
-.dimming {
-    position: absolute;
-    width: 99vw;
-    height: 100%;
-    left: 50%;
-    right: 0;
-    top: 0rem;
-    transform: translateX(-50%);
-    bottom: 0;
-    background-color: rgba(78, 78, 78, 0.274);
 }
