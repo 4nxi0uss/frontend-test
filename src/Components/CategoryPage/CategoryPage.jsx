@@ -3,30 +3,11 @@ import { connect } from 'react-redux';
 
 import { apolloClient } from '../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
+import { CATEGORY_PRODUCT_QUERY } from '../../Apollo/querries';
 
 import './CategoryPage.scss';
 
 import ProductCard from './Subcomponent/ProductCard/ProductCard';
-
-const CATEGORY_QUERY = `query getProducts($cat:String!) { category(input: { title: $cat }) {
-      products {
-        id name inStock gallery description category brand
-          prices {
-          currency {
-            label symbol
-          }
-          amount
-        }
-            attributes {
-            id
-            name
-            type
-            items {
-              displayValue
-              value
-              id
-            }
-          }}}}`
 
 class CategoryPage extends Component {
     state = {
@@ -36,7 +17,7 @@ class CategoryPage extends Component {
     componentDidMount() {
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "cat": this.props.ChoosenCategory }
+                query: gql`${CATEGORY_PRODUCT_QUERY}`, variables: { "category": this.props.ChoosenCategory }
             })
             .then((res) => (
                 this.setState({ products: res?.data.category.products })))
@@ -47,7 +28,7 @@ class CategoryPage extends Component {
         if (prevProps.ChoosenCategory === this.props.ChoosenCategory) return null
         apolloClient
             .query({
-                query: gql`${CATEGORY_QUERY}`, variables: { "cat": this.props.ChoosenCategory }
+                query: gql`${CATEGORY_PRODUCT_QUERY}`, variables: { "category": this.props.ChoosenCategory }
             })
             .then((res) => (this.setState({ products: res.data.category.products })))
             .catch(err => console.warn(err))
