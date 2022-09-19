@@ -5,6 +5,7 @@ import './Header.scss'
 
 import { apolloClient } from '../../Apollo/apolloClient';
 import { gql } from '@apollo/client';
+import { CATEGORY_QUERY } from '../../Apollo/querries';
 
 import { connect } from 'react-redux';
 import { changingCategory } from './headerSlice';
@@ -21,7 +22,7 @@ class Header extends Component {
 
     componentDidMount() {
         apolloClient
-            .query({ query: gql`{categories {name}}` })
+            .query({ query: gql`${CATEGORY_QUERY}` })
             .then((res) => (this.setState({ categories: res.data.categories })))
             .catch(err => console.warn(err))
     }
