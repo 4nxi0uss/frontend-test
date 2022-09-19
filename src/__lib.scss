@@ -1,3 +1,7 @@
+//VARIABLE
+
+$min-width: 1280px;
+
 //Mixins
 
 @mixin productGreenBtn {
@@ -29,5 +33,40 @@
 
     &:active {
         background: rgba(0, 0, 0, 0.73);
+    }
+}
+
+@mixin out-of-stock-text-mixin {
+    position: absolute;
+    left: 0%;
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: center;
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 160%;
+    text-align: center;
+    color: #8D8F9A;
+    text-transform: uppercase;
+    z-index: 3;
+}
+
+@mixin out-of-stock-img-mixin {
+    position: relative;
+    display: block;
+    z-index: 1;
+
+    &::after {
+        position: absolute;
+        content: ' ';
+        background-color: white;
+        opacity: .5;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
     }
 }
